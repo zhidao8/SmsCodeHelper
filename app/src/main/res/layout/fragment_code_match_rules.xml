@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/list_view"/>
+
+    <ImageButton
+        android:id="@+id/btn_add"
+        android:layout_width="@dimen/float_button_size"
+        android:layout_height="@dimen/float_button_size"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/float_button_margin"
+        android:layout_marginEnd="@dimen/float_button_margin"
+        android:layout_marginRight="@dimen/float_button_margin"
+        android:background="@drawable/float_button_selector"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerInside"
+        android:src="@drawable/btn_add"
+        android:textColor="@color/colorTextLight"/>
+
+    <View
+        android:id="@+id/add_rule_layout_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#44000000"
+        android:clickable="true"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:id="@+id/add_rule_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_padding"
+        android:visibility="invisible">
+
+        <EditText
+            android:id="@+id/et_sms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_padding"
+            android:hint="@string/sms_content"
+            android:inputType="textMultiLine"
+            android:textSize="@dimen/default_edit_text_size"/>
+
+        <EditText
+            android:id="@+id/et_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_padding"
+            android:hint="@string/sms_verification_code"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textSize="@dimen/default_edit_text_size"/>
+
+        <TextView
+            android:id="@+id/tv_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sms_has_no_code_like_this"
+            android:textColor="#FF0000"
+            android:visibility="gone"/>
+    </LinearLayout>
+</FrameLayout>

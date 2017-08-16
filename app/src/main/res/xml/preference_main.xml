@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--是否使用兼容模式-->
+    <CheckBoxPreference
+        android:defaultValue="@bool/pref_def_value_compat_mode"
+        android:key="compat_mode"
+        android:summary="@string/pref_compat_mode_summary"
+        android:title="@string/pref_compat_mode"/>
+
+    <MultiSelectListPreference
+        android:entries="@array/pref_entries_sms_handle_ways"
+        android:entryValues="@array/pref_entry_values_sms_handle_ways"
+        android:key="sms_handle_ways"
+        android:title="@string/pref_sms_handle_ways"/>
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/pref_def_value_read_automatically"
+        android:key="read_automatically"
+        android:summary="@string/pref_read_automatically_summary"
+        android:title="@string/pref_read_automatically"/>
+
+    <CheckBoxPreference
+        android:defaultValue="@bool/pref_def_value_express"
+        android:key="express"
+        android:summary="@string/pref_express_summary"
+        android:title="@string/pref_express"/>
+
+    <chenmc.sms.ui.view.TestPreference
+        android:key="test_rules"
+        android:summary="@string/pref_test_rules_summary"
+        android:title="@string/pref_test_rules"/>
+
+    <Preference
+        android:key="custom_rules"
+        android:summary="@string/pref_custom_rules_summary"
+        android:title="@string/pref_custom_rules"/>
+
+    <Preference
+        android:key="clear_code_sms"
+        android:title="@string/pref_clear_code_sms"/>
+
+    <chenmc.sms.ui.view.ShowPermissionPreference
+        android:defaultValue="@bool/pref_def_value_permission"
+        android:key="permission"
+        android:title="@string/pref_permission"/>
+
+    <chenmc.sms.ui.view.AboutPreference
+        android:defaultValue="@bool/pref_def_value_about"
+        android:key="about"
+        android:title="@string/pref_about"/>
+</PreferenceScreen>

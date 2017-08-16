@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_import_rules"
+        android:showAsAction="never"
+        android:title="@string/menu_import_rules"/>
+    <item
+        android:id="@+id/menu_export_rules"
+        android:showAsAction="never"
+        android:title="@string/menu_export_rules"/>
+</menu>

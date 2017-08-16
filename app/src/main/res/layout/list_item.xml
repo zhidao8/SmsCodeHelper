@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingTop="@dimen/item_padding"
+    android:paddingBottom="@dimen/item_padding"
+    android:paddingLeft="@dimen/item_padding"
+    android:paddingStart="@dimen/item_padding"
+    android:paddingRight="@dimen/item_padding"
+    android:paddingEnd="@dimen/item_padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    tools:ignore="UseCompoundDrawables">
+
+    <TextView
+        android:id="@+id/list_item_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="@string/app_name"
+        android:textSize="16sp"
+        android:textColor="@color/colorTextDark"
+        tools:ignore="Deprecated,RtlSymmetry"/>
+</LinearLayout>

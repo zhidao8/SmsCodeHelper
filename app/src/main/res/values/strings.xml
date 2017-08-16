@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">验证码复制</string>
+    <string name="compat_mode_need_permission">兼容模式需要读取短信权限</string>
+    <string name="require_permission">请允许应用接收短信权限</string>
+    <string name="code_have_been_copied">已复制验证码 %s</string>
+    <string name="developer_mode_on">已开启开发者模式</string>
+    <string name="developer_mode_off">已关闭开发者模式</string>
+    <string name="sms">短信</string>
+    <string name="verification_code">验证码</string>
+    <string name="sms_content">短信内容</string>
+    <string name="sms_verification_code">短信验证码</string>
+    <string name="sms_has_no_code_like_this">保存失败！请检查输入的内容</string>
+    <string name="delete_confirm">删除这条规则？</string>
+    <string name="can_not_analyse_sms">无法解析该短信</string>
+
+    <string name="code_is">%1$s验证码：%2$s</string>
+    <string name="express_is">%1$s取件码：%2$s</string>
+    <string name="click_to_copy">点击复制</string>
+
+    <!--menu-->
+    <string name="menu_import_rules">导入规则</string>
+    <string name="menu_export_rules">导出规则</string>
+
+    <!--preference-->
+    <string name="pref_compat_mode">兼容模式</string>
+    <string name="pref_compat_mode_summary">常驻后台</string>
+    <string name="pref_sms_handle_ways">验证码处理方式</string>
+    <string name="pref_copy_immediately">自动复制验证码</string>
+    <string name="pref_copy_immediately_summaryOn">自动复制短信中的验证码</string>
+    <string name="pref_copy_immediately_summaryOff">验证码将会在通知栏显示</string>
+    <string name="pref_read_automatically">自动将短信标记为已读</string>
+    <string name="pref_read_automatically_summary">仍然不能清除通知栏中的短信通知</string>
+    <string name="pref_notification">通知栏通知</string>
+    <string name="pref_notification_summary">通知栏显示验证码和服务商</string>
+    <string name="pref_express">解析快递短信</string>
+    <string name="pref_express_summary">通知栏显示快递取件码</string>
+    <string name="pref_test_rules">测试</string>
+    <string name="pref_test_rules_summary">测试能否复制短信中的验证码</string>
+    <string name="pref_custom_rules">自定义规则</string>
+    <string name="pref_custom_rules_summary">自定义短信验证码匹配规则</string>
+    <string name="pref_developer_mode">开发者模式</string>
+    <string name="pref_sms_contains">短信包含关键词</string>
+    <string name="pref_regexp">验证码匹配规则</string>
+    <string name="pref_express_sms_contains">短信包含关键词</string>
+    <string name="pref_express_regexp">取件码匹配规则</string>
+    <string name="pref_cate_code">短信验证码</string>
+    <string name="pref_cate_express">快递取件码</string>
+    <string name="pref_permission">权限说明</string>
+    <string name="pref_about">关于</string>
+    <string name="pref_about_summary">版本：%1$s(%2$d)</string>
+    <string name="unknown">未知</string>
+
+    <string name="choose_export_dir">选择导出目录</string>
+    <string name="export_success">导出成功</string>
+    <string name="export_fail">导出失败</string>
+    <string name="choose_import_dir">选择导入文件</string>
+    <string name="import_success">导入成功</string>
+    <string name="import_fail">导入失败</string>
+    <string name="dialog_default">默认</string>
+    <string name="delete">删除</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="no_receive_sms_permission_and_work_abnormal">您没有授予应用接收短信的权限，应用将不能正常使用</string>
+    <string name="no_read_sms_permission_and_work_abnormal">您没有授予应用读取短信的权限，应用将不能正常使用</string>
+    <string name="click_permission_allow_permission">点击权限，并授予应用权限</string>
+    <string name="finish">完成</string>
+    <string name="edit_text_no_content">输入内容不能为空</string>
+    <string name="sms_not_contains_code">输入的验证码有误，请检查</string>
+    <string name="select_all">全选</string>
+    <string name="invert_select">反选</string>
+    <string name="pref_clear_code_sms">清除验证码和取件码短信</string>
+    <string name="enable_clear_sms">可清除短信列表</string>
+    <string name="delete_fail">删除失败</string>
+    <string name="need_set_default_mms">从 Android 4.4 开始，删除系统中的短信需要设置当前应用为默认短信应用。</string>
+    <string name="dialog_title_delete_all_sms">删除全部短信？</string>
+    <string name="dialog_message_delete_all_sms">注意：将会同时删除系统短信，此操作不可撤销</string>
+    <string name="dialog_title_delete_all_checked_sms">删除当前选择的短信？</string>
+    <string name="dialog_message_delete_all_checked_sms">注意：将会同时删除系统短信，此操作不可撤销</string>
+    <string name="dialog_title_delete_all_checked_rules">删除当前选择的规则？</string>
+    <string name="dialog_message_delete_all_checked_rules">注意：此操作不可撤销</string>
+    <string name="change_default_mms_to_default">请将默认短信应用改回默认</string>
+    <string name="up_to_parent">返回上级目录</string>
+    <string name="file_not_choose">文件未选择</string>
+    <string name="error_occurred_while_read_sms">读取系统短信时出现异常</string>
+    <string name="if_copy_twice_not_compat_mode">如果在使用过程中发现验证码复制了两次，说明您的手机不需要开启兼容模式</string>
+
+</resources>
