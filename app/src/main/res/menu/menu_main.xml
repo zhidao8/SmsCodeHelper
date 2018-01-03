@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_permission_explanation"
+        android:showAsAction="never"
+        android:title="@string/pref_permission"/>
+
+    <item
+        android:id="@+id/menu_about"
+        android:showAsAction="never"
+        android:title="@string/pref_about"/>
+</menu>

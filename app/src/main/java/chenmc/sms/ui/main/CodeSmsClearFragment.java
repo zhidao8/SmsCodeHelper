@@ -1,4 +1,4 @@
-package chenmc.sms.ui.fragments;
+package chenmc.sms.ui.main;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -32,12 +32,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chenmc.sms.code.helper.R;
+import chenmc.sms.data.CodeSms;
 import chenmc.sms.data.SimpleWrapper;
 import chenmc.sms.transaction.handler.CodeSmsClearHandler;
 import chenmc.sms.transaction.handler.SmsHandler;
-import chenmc.sms.ui.activities.PreferenceActivity;
-import chenmc.sms.utils.database.PrefKey;
-import chenmc.sms.utils.database.PreferenceUtil;
+import chenmc.sms.ui.app.PermissionFragment;
+import chenmc.sms.ui.interfaces.IOnBackPressedActivity;
+import chenmc.sms.ui.interfaces.IOnBackPressedFragment;
+import chenmc.sms.utils.storage.PrefKey;
+import chenmc.sms.utils.storage.PreferenceUtil;
 
 /**
  * @author 明明
@@ -49,7 +52,7 @@ public class CodeSmsClearFragment extends PermissionFragment implements
     ActionMode.Callback,
     ListView.OnItemClickListener,
     ListView.OnItemLongClickListener,
-    PreferenceActivity.OnActivityBackPressedListener {
+    IOnBackPressedFragment {
     
     private CharSequence mPreviousActionBarTitle;
     
@@ -104,7 +107,14 @@ public class CodeSmsClearFragment extends PermissionFragment implements
         listView.setOnItemLongClickListener(this);
         
         setHasOptionsMenu(true);
-        getAttachActivity().addOnBackPressedListener(this);
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getActivity() instanceof IOnBackPressedActivity) {
+            ((IOnBackPressedActivity) getActivity()).setFocusFragment(this);
+        }
     }
     
     private PreferenceActivity getAttachActivity() {
@@ -127,7 +137,6 @@ public class CodeSmsClearFragment extends PermissionFragment implements
     
     @Override
     public void onDetach() {
-        getAttachActivity().removeOnBackPressedListener(this);
         ActionBar actionBar = getActivity().getActionBar();
         if (actionBar != null) {
             actionBar.setTitle(mPreviousActionBarTitle);
@@ -181,15 +190,6 @@ public class CodeSmsClearFragment extends PermissionFragment implements
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-    
-    @Override
-    public boolean onActivityBackPressed() {
-        if (mViewSmsLayoutBg.getVisibility() == View.VISIBLE) {
-            hideViewSmsLayout();
-            return true;
-        }
-        return false;
     }
     
     private boolean showViewSmsLayout() {
@@ -330,6 +330,15 @@ public class CodeSmsClearFragment extends PermissionFragment implements
         return false;
     }
     
+    @Override
+    public boolean onBackPressed() {
+        if (mViewSmsLayoutBg.getVisibility() == View.VISIBLE) {
+            hideViewSmsLayout();
+            return true;
+        }
+        return false;
+    }
+    
     private class ListViewAdapter extends BaseAdapter {
         
         private Context mContext;
@@ -381,15 +390,16 @@ public class CodeSmsClearFragment extends PermissionFragment implements
             
             SimpleWrapper<SmsHandler, Boolean> beanWrapper = mList.get(position);
             String text = "";
+            CodeSms codeSms = beanWrapper.target.getCodeSms();
             if (beanWrapper.target.isVerificationSms()) {
                 text = mContext.getString(
                     R.string.code_is,
-                    beanWrapper.target.getServiceProvider(), beanWrapper.target.getCode()
+                    codeSms.getServiceProvider(), codeSms.getCode()
                 );
             } else if (beanWrapper.target.isExpressSms()) {
                 text = mContext.getString(
                     R.string.express_is,
-                    beanWrapper.target.getServiceProvider(), beanWrapper.target.getCode()
+                    codeSms.getServiceProvider(), codeSms.getCode()
                 );
             }
             viewHolder.text.setText(text);
@@ -415,19 +425,20 @@ public class CodeSmsClearFragment extends PermissionFragment implements
                     beanList.add(mList.get(i).target);
                 }
             }
-            boolean deleteSuccess = CodeSmsClearHandler.deleteCodeSmsFromDatabase(
+            List<SmsHandler> deleteSuccessList = CodeSmsClearHandler.deleteCodeSmsFromDatabase(
                 mContext, beanList);
-            if (deleteSuccess) {
-                for (int i = mList.size() - 1; i >= 0; i--) {
-                    if (mList.get(i).attr) {
-                        mList.remove(i);
+            for (SmsHandler smsHandler : deleteSuccessList) {
+                for (SimpleWrapper<SmsHandler, Boolean> wrapper : mList) {
+                    if (wrapper.target == smsHandler) {
+                        mList.remove(wrapper);
+                        break;
                     }
                 }
             }
             
             notifyDataSetChanged();
             
-            return deleteSuccess;
+            return deleteSuccessList.size() == beanList.size();
         }
         
         /**

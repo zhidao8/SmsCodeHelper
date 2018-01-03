@@ -6,7 +6,7 @@ package chenmc.sms.data;
  *         Created on 2017-4-27.
  */
 
-public class SmsMatchRuleBean implements Cloneable {
+public class CustomRuleBean implements Cloneable {
     // 数据库的_id
     private int mId;
     // 短信
@@ -16,19 +16,19 @@ public class SmsMatchRuleBean implements Cloneable {
     // 验证码匹配规则
     private String mRegExp;
 
-    public SmsMatchRuleBean() {
+    public CustomRuleBean() {
     }
 
-    public SmsMatchRuleBean(String sms) {
+    public CustomRuleBean(String sms) {
         mSms = sms;
     }
 
-    public SmsMatchRuleBean(String sms, String verificationCode) {
+    public CustomRuleBean(String sms, String verificationCode) {
         mSms = sms;
         mVerificationCode = verificationCode;
     }
 
-    public SmsMatchRuleBean(String sms, String verificationCode, String regExp) {
+    public CustomRuleBean(String sms, String verificationCode, String regExp) {
         mSms = sms;
         mVerificationCode = verificationCode;
         mRegExp = regExp;
@@ -75,7 +75,7 @@ public class SmsMatchRuleBean implements Cloneable {
     public Object clone() throws CloneNotSupportedException {
         super.clone();
         
-        SmsMatchRuleBean newObject = new SmsMatchRuleBean(mSms, mVerificationCode, mRegExp);
+        CustomRuleBean newObject = new CustomRuleBean(mSms, mVerificationCode, mRegExp);
         newObject.setId(mId);
         return newObject;
     }

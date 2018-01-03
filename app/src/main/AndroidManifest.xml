@@ -4,8 +4,6 @@
           package="chenmc.sms.code.helper"
           android:installLocation="internalOnly">
 
-    <uses-permission android:name="android.provider.Telephony.SMS_DELIVER"/>
-    <uses-permission android:name="android.provider.Telephony.BROADCAST_WAP_PUSH"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.WRITE_SMS"/>
@@ -13,8 +11,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <uses-permission android:name="android.provider.Telephony.SMS_DELIVER"/>
+    <uses-permission android:name="android.provider.Telephony.BROADCAST_WAP_PUSH"/>
+
     <application
-        android:name="chenmc.sms.ui.view.App"
+        android:name="chenmc.sms.ui.app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -22,13 +23,15 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name="chenmc.sms.ui.activities.PreferenceActivity"
-            android:screenOrientation="portrait">
+            android:name="chenmc.sms.ui.main.PreferenceActivity"
+            android:screenOrientation="portrait"
+            android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- This intent filter is necessary as a default MMS -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
                 <action android:name="android.intent.action.SENDTO"/>

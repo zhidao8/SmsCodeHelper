@@ -1,4 +1,4 @@
-package chenmc.sms.ui.view;
+package chenmc.sms.ui.preference;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 
 import chenmc.sms.code.helper.R;
-import chenmc.sms.utils.database.PrefKey;
+import chenmc.sms.utils.storage.PrefKey;
 
 /**
  * @author 明 明
@@ -31,7 +31,6 @@ public class DeveloperPreference extends Preference {
 
     public DeveloperPreference(Context context) {
         super(context);
-        setOrder(7);
         setKey(PrefKey.KEY_DEVELOPER_MODE);
         setTitle(R.string.pref_developer_mode);
     }

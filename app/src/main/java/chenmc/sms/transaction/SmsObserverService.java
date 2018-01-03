@@ -59,7 +59,7 @@ public class SmsObserverService extends Service {
     public static void stopThisService(Context context) {
         context.stopService(new Intent(context, SmsObserverService.class));
     }
-
+    
     private class SmsObserver extends ContentObserver {
 
         SmsObserver(Handler handler) {
@@ -77,8 +77,9 @@ public class SmsObserverService extends Service {
                 return;
             
             mOld_id = smsHandler.getDatabaseId();
-            smsHandler.handleSms();
-
+    
+            // 处理短信
+            smsHandler.analyseAndHandle();
         }
     }
 }

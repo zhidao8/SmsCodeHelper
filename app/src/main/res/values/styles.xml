@@ -9,6 +9,8 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/colorPrimary</item>
         <item name="android:actionModeStyle">@style/AppTheme.ActionModeStyle</item>
+
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.ActionBarStyle" parent="@android:style/Widget.DeviceDefault.Light.ActionBar.Solid">

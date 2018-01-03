@@ -84,5 +84,9 @@
     <string name="file_not_choose">文件未选择</string>
     <string name="error_occurred_while_read_sms">读取系统短信时出现异常</string>
     <string name="if_copy_twice_not_compat_mode">如果在使用过程中发现验证码复制了两次，说明您的手机不需要开启兼容模式</string>
+    <string name="set_read_fail">标记短信已读操作失败</string>
+    <string name="category_open_source_address">开源地址</string>
+    <string name="category_used_library">使用到的开源库</string>
+    <string name="this_function_maybe_unusable">这个功能可能并没有什么用</string>
 
 </resources>

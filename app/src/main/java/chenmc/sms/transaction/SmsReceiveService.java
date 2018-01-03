@@ -52,7 +52,7 @@ public class SmsReceiveService extends Service {
 
         mServiceHandler.getLooper().quit();
     }
-
+    
     private class ServiceHandler extends Handler {
         ServiceHandler(Looper looper) {
             super(looper);
@@ -66,7 +66,7 @@ public class SmsReceiveService extends Service {
             SmsHandler smsHandler = SmsHandler.createFromIntent(
                 SmsReceiveService.this, intent);
             // 处理短信
-            smsHandler.handleSms();
+            smsHandler.analyseAndHandle();
             
             stopSelfResult(msg.arg1);
         }

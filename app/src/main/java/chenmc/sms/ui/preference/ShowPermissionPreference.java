@@ -1,4 +1,4 @@
-package chenmc.sms.ui.view;
+package chenmc.sms.ui.preference;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -57,6 +57,8 @@ public class ShowPermissionPreference extends Preference {
             layoutParams.topMargin = getContext().getResources().getDimensionPixelSize(R.dimen.activity_padding);
             webView.setLayoutParams(layoutParams);
         }
+        // 设置 WebView 背景透明
+        webView.setBackgroundColor(0);
         webView.loadUrl("file:///android_asset/permission.html");
 
         AlertDialog dialog = new AlertDialog.Builder(getContext())

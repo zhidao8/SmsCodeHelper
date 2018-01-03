@@ -1,4 +1,4 @@
-package chenmc.sms.utils.database;
+package chenmc.sms.utils.storage;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

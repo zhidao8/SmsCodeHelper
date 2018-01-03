@@ -67,7 +67,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable ex) {
         handleException(ex);
         //让系统默认的异常处理器再处理一遍
-//        mDefaultHandler.uncaughtException(thread, ex);
+        mDefaultHandler.uncaughtException(thread, ex);
     }
 
     /**
@@ -86,10 +86,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         //保存日志文件
         final File logFile = saveCrashInfoToFile(ex);
         if (logFile != null) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
+            new Handler().post(new Runnable() {
                 @Override
                 public void run() {
+                    Looper.prepare();
                     Toast.makeText(mContext, "Log: " + logFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    Looper.loop();
                 }
             });
         }

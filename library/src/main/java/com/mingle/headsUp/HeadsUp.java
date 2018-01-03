@@ -32,6 +32,7 @@ public class HeadsUp   {
 
     private boolean isSticky=false;
 
+
     private boolean activateStatusBar=true;
 
 
@@ -61,7 +62,7 @@ public class HeadsUp   {
 
     public static class Builder  extends  NotificationCompat.Builder {
 
-        private List<NotificationCompat.Action> actions= new ArrayList<>();
+        private List<NotificationCompat.Action> actions=new ArrayList<NotificationCompat.Action>();
         private HeadsUp headsUp;
 
         public Builder(Context context) {
@@ -98,17 +99,21 @@ public class HeadsUp   {
 //            super.setSmallIcon(icon);
             return this;
         }
-        
-        protected Builder setIcon(int icon){
+        protected   Builder setIcon(int icon){
             super.setSmallIcon(icon);
             return this;
         }
-        
+
+
+
         public Builder setSticky(boolean isSticky){
             headsUp.setSticky(isSticky);
             return this;
         }
-        
+
+
+
+
         @Override
         public Builder addAction(int icon, CharSequence title, PendingIntent intent) {
             NotificationCompat.Action action=new NotificationCompat.Action(icon, title, intent);
@@ -117,6 +122,9 @@ public class HeadsUp   {
             return this;
         }
 
+
+
+
         public HeadsUp buildHeadUp(){
             headsUp.setNotification(this.build());
             headsUp.setActions(actions);
@@ -124,7 +132,7 @@ public class HeadsUp   {
             return  headsUp;
         }
 
-        private Notification silencerNotification(){
+        private   Notification silencerNotification(){
             super.setSmallIcon(headsUp.getIcon());
             setDefaults(0);
             return this.build();

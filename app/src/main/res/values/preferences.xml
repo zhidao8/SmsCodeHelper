@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="pref_def_value_compat_mode">false</bool>
-    <bool name="pref_def_value_read_automatically">true</bool>
+    <bool name="pref_def_value_read_automatically">false</bool>
     <bool name="pref_def_value_express">false</bool>
     <bool name="pref_def_value_permission">true</bool>
     <bool name="pref_def_value_about">false</bool>

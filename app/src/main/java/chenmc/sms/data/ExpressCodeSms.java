@@ -16,4 +16,8 @@ public class ExpressCodeSms extends CodeSms {
     public ExpressCodeSms(String serviceProvider, String expressCode) {
         super(serviceProvider, expressCode);
     }
+    
+    public ExpressCodeSms(String serviceProvider, String code, String content) {
+        super(serviceProvider, code, content);
+    }
 }

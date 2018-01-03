@@ -1,4 +1,4 @@
-package chenmc.sms.utils.database;
+package chenmc.sms.utils.storage;
 
 /**
  * Created by 明明 on 2017/7/28.
@@ -22,5 +22,6 @@ public class PrefKey {
     public static final String KEY_CLEAR_CODE_SMS = "clear_code_sms";
     public static final String FIRST_USE_CLEAR_CODE_SMS = "first_use_clear_code_sms";
     public static final String KEY_SMS_DEFAULT_APPLICATION = "sms_default_application";
-    
+    public static final String KEY_SOURCE_ADDRESS = "source_address";
+    public static final String KEY_LIBRARY = "library";
 }

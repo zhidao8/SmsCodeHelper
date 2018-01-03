@@ -8,8 +8,8 @@ android {
         applicationId "chenmc.sms.code.helper"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 20170816
-        versionName "3.4"
+        versionCode 20171003
+        versionName "3.5"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

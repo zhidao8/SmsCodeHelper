@@ -9,6 +9,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.widget.Toast;
+
+import chenmc.sms.code.helper.R;
+import chenmc.sms.utils.ToastUtil;
 
 /**
  * 将短信设置为“已读”的服务
@@ -56,8 +60,11 @@ public class SetReadSmsService extends Service {
                 ContentValues values = new ContentValues();
                 // 将短信标记为已读，将数据库中的表头 read 写为 1
                 values.put("read", 1);
-                contentResolver.update(Uri.parse("content://sms/"), values,
+                int count = contentResolver.update(Uri.parse("content://sms/"), values,
                     "body like ?", new String[]{"%" + body + "%"});
+                if (count == 0) {
+                    ToastUtil.showToast(getString(R.string.set_read_fail), Toast.LENGTH_SHORT);
+                }
             }
             stopSelfResult(msg.arg1);
         }

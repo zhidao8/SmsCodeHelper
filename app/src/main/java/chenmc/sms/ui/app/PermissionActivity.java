@@ -1,4 +1,4 @@
-package chenmc.sms.ui.activities;
+package chenmc.sms.ui.app;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -16,7 +16,7 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 
 import chenmc.sms.code.helper.R;
-import chenmc.sms.ui.interfaces.OnRequestPermissionsResultListener;
+import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult;
 import chenmc.sms.utils.TransparentBarUtils;
 
 /**
@@ -25,7 +25,7 @@ import chenmc.sms.utils.TransparentBarUtils;
 
 public abstract class PermissionActivity extends Activity {
     
-    private SparseArray<OnRequestPermissionsResultListener> mListeners = new SparseArray<>(2);
+    private SparseArray<IOnRequestPermissionsResult> mListeners = new SparseArray<>(2);
     
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public abstract class PermissionActivity extends Activity {
     
     @SuppressLint("NewApi")
     public void requestPermissions(int requestCode, String[] permissions,
-        OnRequestPermissionsResultListener listener) {
+        IOnRequestPermissionsResult listener) {
     
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (listener != null) {
@@ -82,7 +82,7 @@ public abstract class PermissionActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
         @NonNull int[] grantResults) {
     
-        OnRequestPermissionsResultListener listener = mListeners.get(requestCode);
+        IOnRequestPermissionsResult listener = mListeners.get(requestCode);
         if (listener != null) {
             // 使用线性表将系统允许的权限和不被系统允许的权限分别保存起来
             ArrayList<String> grantedList = new ArrayList<>(2);

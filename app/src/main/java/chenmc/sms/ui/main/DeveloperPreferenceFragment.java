@@ -1,15 +1,14 @@
-package chenmc.sms.ui.fragments;
+package chenmc.sms.ui.main;
 
 import android.app.ActionBar;
-import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 
 import chenmc.sms.code.helper.R;
-import chenmc.sms.utils.database.PrefKey;
-import chenmc.sms.utils.database.PreferenceUtil;
+import chenmc.sms.utils.storage.PrefKey;
+import chenmc.sms.utils.storage.PreferenceUtil;
 
 /**
  * Created by 明明 on 2017/8/9.
@@ -17,8 +16,6 @@ import chenmc.sms.utils.database.PreferenceUtil;
 
 public class DeveloperPreferenceFragment extends PreferenceFragment implements
     Preference.OnPreferenceChangeListener {
-    
-    private CharSequence mPreviousActionBarTitle;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,23 +27,12 @@ public class DeveloperPreferenceFragment extends PreferenceFragment implements
     }
     
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onStart() {
+        super.onStart();
         ActionBar actionBar = getActivity().getActionBar();
         if (actionBar != null) {
-            mPreviousActionBarTitle = actionBar.getTitle();
             actionBar.setTitle(R.string.pref_developer_mode);
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-    
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        ActionBar actionBar = getActivity().getActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(mPreviousActionBarTitle);
-            actionBar.setDisplayHomeAsUpEnabled(false);
         }
     }
     

@@ -1,16 +1,16 @@
-package chenmc.sms.ui.fragments;
+package chenmc.sms.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +23,9 @@ import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.provider.Telephony;
 import android.support.v4.app.ActivityCompat;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
@@ -38,13 +40,12 @@ import java.util.TreeSet;
 
 import chenmc.sms.code.helper.R;
 import chenmc.sms.transaction.SmsObserverService;
-import chenmc.sms.ui.activities.PreferenceActivity;
-import chenmc.sms.ui.interfaces.OnRequestPermissionsResultListener;
-import chenmc.sms.ui.view.AboutPreference;
-import chenmc.sms.ui.view.DeveloperPreference;
+import chenmc.sms.ui.app.PermissionPreferenceFragment;
+import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult;
+import chenmc.sms.ui.preference.DeveloperPreference;
 import chenmc.sms.utils.DataUpdater;
-import chenmc.sms.utils.database.PrefKey;
-import chenmc.sms.utils.database.PreferenceUtil;
+import chenmc.sms.utils.storage.PrefKey;
+import chenmc.sms.utils.storage.PreferenceUtil;
 
 /**
  * Created by 明明 on 2017/8/9.
@@ -52,7 +53,7 @@ import chenmc.sms.utils.database.PreferenceUtil;
 
 public class MainPreferenceFragment extends PermissionPreferenceFragment implements
     Preference.OnPreferenceChangeListener,
-    OnRequestPermissionsResultListener {
+    IOnRequestPermissionsResult {
     
     /*
      * 请求获取接收短信权限的请求码
@@ -69,6 +70,7 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
     
     private static final String ENTRIES_CONNECTOR = " + ";
     
+    private static final int SHOW_APP_DETAIL_DELAY = 3000;
     private static final int WHAT_SHOW_APP_DETAIL = 0;
     private static final int WHAT_REQUEST_PERMISSION = 1;
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -81,10 +83,11 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
                     Toast.makeText(getActivity(),
                         R.string.click_permission_allow_permission,
                         Toast.LENGTH_LONG).show();
-                    
+                    // 显示应用详情
                     showApplicationDetail(REQUEST_PERMISSIONS_RECEIVE_SMS);
                     break;
                 case WHAT_REQUEST_PERMISSION:
+                    // 请求权限
                     requestPermissions(REQUEST_PERMISSIONS_RECEIVE_SMS,
                         new String[]{Manifest.permission.RECEIVE_SMS}, MainPreferenceFragment.this);
                     break;
@@ -100,53 +103,88 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
         DataUpdater dataUpdater = new DataUpdater(getActivity());
         dataUpdater.updateSharedPreference();
     
-        showPermissionAtFirstRun();
-        
+        showPermissionFirstRun();
+        setHasOptionsMenu(true);
         init();
     }
     
-    private void showPermissionAtFirstRun() {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_permission_explanation:
+                showPermissionExplanation();
+                return true;
+            case R.id.menu_about:
+                replaceFragment(new AboutFragment());
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        ActionBar actionBar = getActivity().getActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.app_name);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
+    }
+    
+    // 第一次运行应用的一些初始化操作
+    private void showPermissionFirstRun() {
         PreferenceUtil preferenceUtil = PreferenceUtil.init(getActivity());
         boolean firstRun = preferenceUtil.get(PrefKey.KEY_FIRST_LAUNCH, true);
         if (firstRun) {
-            @SuppressLint("InflateParams")
-            View dialogView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.dialog_permission, null);
-            final WebView webView = (WebView) dialogView.findViewById(R.id.dialog_webView);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) webView.getLayoutParams();
-                layoutParams.topMargin = this.getResources().getDimensionPixelSize(R.dimen.activity_padding);
-                webView.setLayoutParams(layoutParams);
-            }
-            webView.loadUrl("file:///android_asset/permission.html");
-            
-            new AlertDialog.Builder(getActivity())
-                .setView(dialogView)
-                .setTitle(getString(R.string.pref_permission))
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        // 请求权限
-                        mHandler.sendEmptyMessage(WHAT_REQUEST_PERMISSION);
-                    }
-                })
-                .setCancelable(false)
-                .create()
-                .show();
-            
-            preferenceUtil.edit()
-                .put(PrefKey.KEY_FIRST_LAUNCH, false)
-                .apply();
+            showPermissionExplanation();
+            // 保存一个 false 值标记应用已经运行过了
+            preferenceUtil.put(PrefKey.KEY_FIRST_LAUNCH, false);
         } else {
-            // 请求权限
+            // 不是第一次运行应用，直接请求权限
             mHandler.sendEmptyMessage(WHAT_REQUEST_PERMISSION);
         }
     }
     
+    // 显示权限说明
+    private void showPermissionExplanation() {
+        // 第一次运行显示应用的权限说明
+        @SuppressLint("InflateParams")
+        View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_permission, null);
+        final WebView webView = (WebView) dialogView.findViewById(R.id.dialog_webView);
+        // 设置 WebView 背景透明
+        webView.setBackgroundColor(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) webView.getLayoutParams();
+            layoutParams.topMargin = this.getResources().getDimensionPixelSize(R.dimen.activity_padding);
+            webView.setLayoutParams(layoutParams);
+        }
+        webView.loadUrl("file:///android_asset/permission.html");
+    
+        new AlertDialog.Builder(getActivity())
+            .setView(dialogView)
+            .setTitle(getString(R.string.pref_permission))
+            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    // 点击确定后，请求权限
+                    mHandler.sendEmptyMessage(WHAT_REQUEST_PERMISSION);
+                }
+            })
+            .setCancelable(false)
+            .create()
+            .show();
+    }
+    
     @Override
     public void onPermissionGranted(int requestCode, String[] grantedPermissions) {
-        // ignored
+        // 权限被允许，不做任何操作
     }
     
     @Override
@@ -158,7 +196,9 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
                     R.string.no_receive_sms_permission_and_work_abnormal,
                     Toast.LENGTH_LONG).show();
                 if (deniedAlways[0]) {
-                    mHandler.sendEmptyMessageDelayed(WHAT_SHOW_APP_DETAIL, 3000);
+                    // 请求权限时用户选择了不再提醒，{@link SHOW_APP_DETAIL_DELAY} 毫秒后显示应用详情，
+                    // 引导用户再次授权
+                    mHandler.sendEmptyMessageDelayed(WHAT_SHOW_APP_DETAIL, SHOW_APP_DETAIL_DELAY);
                 }
                 break;
             case REQUEST_PERMISSIONS_READ_SMS:
@@ -166,18 +206,16 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
                     R.string.no_read_sms_permission_and_work_abnormal,
                     Toast.LENGTH_LONG).show();
                 if (deniedAlways[0]) {
-                    mHandler.sendEmptyMessageDelayed(WHAT_SHOW_APP_DETAIL, 3000);
+                    // 请求权限时用户选择了不再提醒，{@link SHOW_APP_DETAIL_DELAY} 毫秒后显示应用详情，
+                    // 引导用户再次授权
+                    mHandler.sendEmptyMessageDelayed(WHAT_SHOW_APP_DETAIL, SHOW_APP_DETAIL_DELAY);
                 }
                 break;
         }
     }
     
-    private PreferenceActivity getThisActivity() {
-        return (PreferenceActivity) getActivity();
-    }
-    
     private void init() {
-        PreferenceUtil preferenceUtil = PreferenceUtil.init(getThisActivity());
+        PreferenceUtil preferenceUtil = PreferenceUtil.init(getActivity());
         
         //region 兼容模式
         if (preferenceUtil.get(PrefKey.KEY_COMPAT_MODE,
@@ -199,36 +237,38 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
             Collections.addAll(valuesSet, defValues);
             prefSmsHandleWays.setValues(valuesSet);
         }
-        StringBuilder sbSummary = new StringBuilder();
+        StringBuilder summarySB = new StringBuilder();
         for (String value : valuesSet) {
-            sbSummary.append(prefSmsHandleWays.getEntries()[Integer.valueOf(value)])
+            summarySB.append(prefSmsHandleWays.getEntries()[Integer.valueOf(value)])
                 .append(ENTRIES_CONNECTOR);
         }
-        // 删除 sbSummary 中后面多余的 linkString
-        if (sbSummary.length() >= ENTRIES_CONNECTOR.length()) {
-            sbSummary.delete(sbSummary.length() - ENTRIES_CONNECTOR.length(), sbSummary.length());
+        // 删除 summarySB 中后面多余的 linkString
+        if (summarySB.length() >= ENTRIES_CONNECTOR.length()) {
+            summarySB.delete(summarySB.length() - ENTRIES_CONNECTOR.length(), summarySB.length());
         }
-        prefSmsHandleWays.setSummary(sbSummary);
+        prefSmsHandleWays.setSummary(summarySB);
         
         prefSmsHandleWays.setOnPreferenceChangeListener(this);
         //endregion
         
-        //region 关于
-        AboutPreference prefAbout = (AboutPreference) findPreference(PrefKey.KEY_ABOUT);
-        try {
-            PackageInfo pi = getActivity().getPackageManager()
-                .getPackageInfo(getActivity().getPackageName(), 0);
-            prefAbout.setSummary(
-                getString(R.string.pref_about_summary, pi.versionName, pi.versionCode)
-            );
-        } catch (PackageManager.NameNotFoundException ignored) {
-        }
-        prefAbout.setOnPreferenceChangeListener(this);
-        //endregion
-        
-        // 如果开启了开发者模式
-        if (prefAbout.isDeveloperMode()) {
-            getPreferenceScreen().addPreference(new DeveloperPreference(getActivity()));
+        findPreference(PrefKey.KEY_READ_AUTOMATICALLY).setOnPreferenceChangeListener(this);
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        boolean isDeveloperMode = PreferenceUtil.init(getActivity())
+            .get(PrefKey.KEY_ABOUT, getResources().getBoolean(R.bool.pref_def_value_about));
+        Preference prefDeveloper = findPreference(PrefKey.KEY_DEVELOPER_MODE);
+        if (prefDeveloper == null && isDeveloperMode) {
+            // 开发者模式不存在，并且当前处于开发者模式
+            DeveloperPreference preference = new DeveloperPreference(getActivity());
+            // 将“开发者模式”插入到现在“清除验证码短信”的位置的下面
+            preference.setOrder(findPreference(PrefKey.KEY_CLEAR_CODE_SMS).getOrder() + 1);
+            getPreferenceScreen().addPreference(preference);
+        } else if (prefDeveloper != null && !isDeveloperMode) {
+            // 开发者模式存在，并且当前不处于开发者模式
+            getPreferenceScreen().removePreference(prefDeveloper);
         }
     }
     
@@ -237,22 +277,15 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
         Preference preference) {
         switch (preference.getKey()) {
             case PrefKey.KEY_CUSTOM_RULES:
-                getFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.animator.fragment_enter, R.animator.fragment_exit,
-                        R.animator.fragment_pop_enter, R.animator.fragment_pop_exit)
-                    .replace(R.id.fragment_container, new CodeMatchRulesFragment())
-                    .addToBackStack(null)
-                    .commit();
+                // 自定义规则
+                replaceFragment(new CustomRulesFragment());
                 return true;
             case PrefKey.KEY_DEVELOPER_MODE:
-                getFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.animator.fragment_enter, R.animator.fragment_exit,
-                        R.animator.fragment_pop_enter, R.animator.fragment_pop_exit)
-                    .replace(R.id.fragment_container, new DeveloperPreferenceFragment())
-                    .addToBackStack(null)
-                    .commit();
-                break;
+                // 开发者模式
+                replaceFragment(new DeveloperPreferenceFragment());
+                return true;
             case PrefKey.KEY_CLEAR_CODE_SMS:
+                // 清除所有验证码短信
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
                     !isMyAppLauncherDefault()) {
                     // 如果安卓版本大于等于 4.4，并且当前应用不是默认启动应用
@@ -260,9 +293,8 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
                     String smsDefaultApp = Settings.Secure.getString(
                         getActivity().getContentResolver(), "sms_default_application");
                     // 先将当前默认启动应用保存起来
-                    PreferenceUtil.init(getActivity()).edit()
-                        .put(PrefKey.KEY_SMS_DEFAULT_APPLICATION, smsDefaultApp)
-                        .apply();
+                    PreferenceUtil.init(getActivity())
+                        .put(PrefKey.KEY_SMS_DEFAULT_APPLICATION, smsDefaultApp);
                     
                     // Android 4.4 及以上的版本中，需要设置默认短信应用才能删除短信
                     DialogInterface.OnClickListener confirmListener = new DialogInterface.OnClickListener() {
@@ -277,15 +309,13 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
                                 REQUEST_CHANGE_DEFAULT_SMS_APP);
                             
                             PreferenceUtil.init(getActivity())
-                                .edit()
-                                .put(PrefKey.FIRST_USE_CLEAR_CODE_SMS, false)
-                                .apply();
+                                .put(PrefKey.FIRST_USE_CLEAR_CODE_SMS, false);
                         }
                     };
                     
                     PreferenceUtil preferenceUtil = PreferenceUtil.init(getActivity());
                     if (preferenceUtil.get(PrefKey.FIRST_USE_CLEAR_CODE_SMS, true)) {
-                        // 如果是第一次点击这个选项，则显示对话框
+                        // 如果是第一次点击这个选项，则显示提示对话框
                         new AlertDialog.Builder(getActivity())
                             .setTitle(R.string.pref_permission)
                             .setMessage(R.string.need_set_default_mms)
@@ -298,12 +328,7 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
                         confirmListener.onClick(null, 0);
                     }
                 } else {
-                    getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.fragment_enter, R.animator.fragment_exit,
-                            R.animator.fragment_pop_enter, R.animator.fragment_pop_exit)
-                        .replace(R.id.fragment_container, new CodeSmsClearFragment())
-                        .addToBackStack(null)
-                        .commit();
+                    replaceFragment(new CodeSmsClearFragment());
                 }
                 return true;
         }
@@ -331,15 +356,7 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
                         requestPermissions(REQUEST_PERMISSIONS_READ_SMS, new String[]{Manifest.permission.READ_SMS}, this);
                     }
                 }
-                break;
-            case PrefKey.KEY_ABOUT:
-                PreferenceScreen preferenceScreen = getPreferenceScreen();
-                if ((boolean) newValue) {
-                    preferenceScreen.addPreference(new DeveloperPreference(getActivity()));
-                } else {
-                    preferenceScreen.removePreference(findPreference(PrefKey.KEY_DEVELOPER_MODE));
-                }
-                break;
+                return true;
             case PrefKey.KEY_SMS_HANDLE_WAYS:
                 @SuppressWarnings("unchecked")
                 Set<String> values = (Set<String>) newValue;
@@ -364,10 +381,20 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
                     pref.setValues(values);
                     preference.setSummary(pref.getEntries()[Integer.valueOf(defValue)]);
                 }
-                break;
+                return true;
+            case PrefKey.KEY_READ_AUTOMATICALLY:
+                if ((Boolean) newValue) {
+                    new AlertDialog.Builder(getActivity())
+                        .setTitle(preference.getTitle())
+                        .setMessage(R.string.this_function_maybe_unusable)
+                        .setPositiveButton(R.string.ok, null)
+                        .create()
+                        .show();
+                }
+                return true;
         }
         
-        return true;
+        return false;
     }
     
     @Override
@@ -389,17 +416,21 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
                 break;
             case REQUEST_CHANGE_DEFAULT_SMS_APP:
                 if (resultCode == Activity.RESULT_OK) {
-                    getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.fragment_enter, R.animator.fragment_exit,
-                            R.animator.fragment_pop_enter, R.animator.fragment_pop_exit)
-                        .replace(R.id.fragment_container, new CodeSmsClearFragment())
-                        .addToBackStack(null)
-                        .commit();
+                    replaceFragment(new CodeSmsClearFragment());
                 }
                 break;
         }
         
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    
+    private void replaceFragment(Fragment fragment) {
+        getFragmentManager().beginTransaction()
+            .setCustomAnimations(R.animator.fragment_enter, R.animator.fragment_exit,
+                R.animator.fragment_pop_enter, R.animator.fragment_pop_exit)
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit();
     }
     
     @Override
@@ -408,8 +439,7 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
         SmsObserverService.stopThisService(getActivity());
         
         // 如果开启了兼容模式，重启后台进程
-        if (PreferenceUtil.init(getActivity()).get(PrefKey.KEY_COMPAT_MODE,
-            getResources().getBoolean(R.bool.pref_def_value_compat_mode))) {
+        if (PreferenceUtil.init(getActivity()).get(PrefKey.KEY_COMPAT_MODE, false)) {
             SmsObserverService.startThisService(getActivity());
         }
     }
@@ -432,4 +462,5 @@ public class MainPreferenceFragment extends PermissionPreferenceFragment impleme
         
         return preferredActivities.size() > 0;
     }
+    
 }

@@ -1,4 +1,4 @@
-package chenmc.sms.ui.view;
+package chenmc.sms.ui.app;
 
 import android.app.Application;
 import android.content.Context;

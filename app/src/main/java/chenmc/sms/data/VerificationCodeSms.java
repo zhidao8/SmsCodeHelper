@@ -16,4 +16,8 @@ public class VerificationCodeSms extends CodeSms {
     public VerificationCodeSms(String serviceProvider, String verificationCode) {
         super(serviceProvider, verificationCode);
     }
+    
+    public VerificationCodeSms(String serviceProvider, String code, String content) {
+        super(serviceProvider, code, content);
+    }
 }

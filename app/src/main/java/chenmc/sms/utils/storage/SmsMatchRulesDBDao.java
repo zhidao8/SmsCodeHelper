@@ -1,4 +1,4 @@
-package chenmc.sms.utils.database;
+package chenmc.sms.utils.storage;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import chenmc.sms.data.SmsMatchRuleBean;
+import chenmc.sms.data.CustomRuleBean;
 
 /**
  * Created by 明明 on 2017/6/30.
@@ -25,7 +25,7 @@ public class SmsMatchRulesDBDao {
         mDatabaseHelper.close();
     }
     
-    public void insert(SmsMatchRuleBean... beans) {
+    public void insert(CustomRuleBean... beans) {
         String sql = "insert into " + CodeMatchRuleTable.TABLE_NAME + "(" +
             CodeMatchRuleTable.Columns.SMS + "," +
             CodeMatchRuleTable.Columns.CODE + "," +
@@ -33,7 +33,7 @@ public class SmsMatchRulesDBDao {
             " values (?, ?, ?)";
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         db.beginTransaction();
-        for (SmsMatchRuleBean bean : beans) {
+        for (CustomRuleBean bean : beans) {
             db.execSQL(sql,
                 new Object[]{
                     bean.getSms(),
@@ -46,7 +46,7 @@ public class SmsMatchRulesDBDao {
         db.endTransaction();
     }
     
-    public void update(SmsMatchRuleBean... beans) {
+    public void update(CustomRuleBean... beans) {
         String sql = "update " + CodeMatchRuleTable.TABLE_NAME + " set " +
             CodeMatchRuleTable.Columns.SMS + " = ?," +
             CodeMatchRuleTable.Columns.CODE + " = ?," +
@@ -55,7 +55,7 @@ public class SmsMatchRulesDBDao {
             CodeMatchRuleTable.Columns._ID + " = ?";
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         db.beginTransaction();
-        for (SmsMatchRuleBean bean : beans) {
+        for (CustomRuleBean bean : beans) {
             db.execSQL(sql,
                 new Object[]{
                     bean.getSms(),
@@ -69,13 +69,13 @@ public class SmsMatchRulesDBDao {
         db.endTransaction();
     }
     
-    public void delete(SmsMatchRuleBean... beans) {
+    public void delete(CustomRuleBean... beans) {
         String sql = "delete from " + CodeMatchRuleTable.TABLE_NAME +
             " where " +
             CodeMatchRuleTable.Columns._ID + " = ?";
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         db.beginTransaction();
-        for (SmsMatchRuleBean bean : beans) {
+        for (CustomRuleBean bean : beans) {
             db.execSQL(sql,
                 new Object[]{
                     bean.getId()
@@ -86,13 +86,13 @@ public class SmsMatchRulesDBDao {
         db.endTransaction();
     }
     
-    public List<SmsMatchRuleBean> selectAll() {
+    public List<CustomRuleBean> selectAll() {
         String sql = "select * from " + CodeMatchRuleTable.TABLE_NAME;
-        ArrayList<SmsMatchRuleBean> list = new ArrayList<>();
+        ArrayList<CustomRuleBean> list = new ArrayList<>();
         Cursor cursor = mDatabaseHelper.getReadableDatabase().rawQuery(sql, null);
         if (cursor.moveToFirst()) {
             do {
-                SmsMatchRuleBean bean = new SmsMatchRuleBean();
+                CustomRuleBean bean = new CustomRuleBean();
                 bean.setId(cursor.getInt(cursor.getColumnIndex(CodeMatchRuleTable.Columns._ID)));
                 bean.setSms(cursor.getString(cursor.getColumnIndex(CodeMatchRuleTable.Columns.SMS)));
                 bean.setVerificationCode(cursor.getString(cursor.getColumnIndex(CodeMatchRuleTable.Columns.CODE)));

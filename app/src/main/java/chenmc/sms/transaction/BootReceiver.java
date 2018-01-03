@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import chenmc.sms.code.helper.R;
-import chenmc.sms.utils.database.PrefKey;
-import chenmc.sms.utils.database.PreferenceUtil;
+import chenmc.sms.utils.storage.PrefKey;
+import chenmc.sms.utils.storage.PreferenceUtil;
 
 /**
  * 接收开机完成广播的接收器

@@ -1,4 +1,4 @@
-package chenmc.sms.ui.view;
+package chenmc.sms.ui.preference;
 
 import android.annotation.TargetApi;
 import android.content.Context;

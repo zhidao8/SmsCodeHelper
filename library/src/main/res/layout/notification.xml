@@ -12,7 +12,7 @@
                 android:paddingLeft="11dp"
                 android:paddingRight="11dp"
                 android:paddingBottom="13dp"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/hu_ic_launcher" />
             <TextView
                 android:id="@+id/titleTV"
                 android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@+id/iconIM"
                 android:background="@color/gray"
-                android:visibility="gone"/>
+                android:visibility="gone"></View>
 
             <LinearLayout
                 android:id="@+id/menuL"
@@ -82,7 +82,7 @@
                         android:duplicateParentState="true"
                         android:padding="6dp"
                         android:scaleType="centerInside"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/hu_ic_launcher" />
 
                     <TextView
                         android:id="@+id/menuText1"
@@ -109,7 +109,7 @@
                         android:duplicateParentState="true"
                         android:padding="6dp"
                         android:scaleType="centerInside"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/hu_ic_launcher" />
 
                     <TextView
                         android:id="@+id/menuText2"
@@ -137,7 +137,7 @@
                         android:duplicateParentState="true"
                         android:padding="6dp"
                         android:scaleType="centerInside"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/hu_ic_launcher" />
 
                     <TextView
                         android:id="@+id/menuText3"

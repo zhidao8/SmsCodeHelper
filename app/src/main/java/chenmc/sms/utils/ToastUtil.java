@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
-import chenmc.sms.ui.view.App;
+import chenmc.sms.ui.app.App;
 
 /**
  * @author 明 明
@@ -17,7 +17,16 @@ public class ToastUtil {
     private static final String KEY_TEXT = "text";
     private static final String KEY_DURATION = "duration";
     
-    private static Handler mHandler = new UtilHandler(Looper.getMainLooper());
+    private static Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle data = msg.getData();
+    
+            Toast.makeText(App.appContext, data.getString(KEY_TEXT),
+                data.getInt(KEY_DURATION) == Toast.LENGTH_SHORT ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG
+            ).show();
+        }
+    };
 
     public static void showToast(String text, int duration) {
         Message message = mHandler.obtainMessage();
@@ -33,18 +42,4 @@ public class ToastUtil {
         showToast(App.appContext.getString(textRes), duration);
     }
 
-    private static class UtilHandler extends Handler {
-        UtilHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            Bundle data = msg.getData();
-
-            Toast.makeText(App.appContext, data.getString(KEY_TEXT),
-                data.getInt(KEY_DURATION) == Toast.LENGTH_SHORT ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG
-            ).show();
-        }
-    }
 }

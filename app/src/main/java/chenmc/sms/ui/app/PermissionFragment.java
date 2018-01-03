@@ -1,4 +1,4 @@
-package chenmc.sms.ui.fragments;
+package chenmc.sms.ui.app;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -13,7 +13,7 @@ import android.util.SparseArray;
 
 import java.util.ArrayList;
 
-import chenmc.sms.ui.interfaces.OnRequestPermissionsResultListener;
+import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult;
 
 /**
  * @author 明明
@@ -22,11 +22,11 @@ import chenmc.sms.ui.interfaces.OnRequestPermissionsResultListener;
 
 public abstract class PermissionFragment extends Fragment {
     
-    private SparseArray<OnRequestPermissionsResultListener> mListeners = new SparseArray<>(2);
+    private SparseArray<IOnRequestPermissionsResult> mListeners = new SparseArray<>(2);
     
     @SuppressLint("NewApi")
     public void requestPermissions(int requestCode, String[] permissions,
-        OnRequestPermissionsResultListener listener) {
+        IOnRequestPermissionsResult listener) {
         
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (listener != null) {
@@ -61,7 +61,7 @@ public abstract class PermissionFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
         @NonNull int[] grantResults) {
-        OnRequestPermissionsResultListener listener = mListeners.get(requestCode);
+        IOnRequestPermissionsResult listener = mListeners.get(requestCode);
         if (listener != null) {
             // 使用线性表将系统允许的权限和不被系统允许的权限分别保存起来
             ArrayList<String> deniedList = new ArrayList<>(2);

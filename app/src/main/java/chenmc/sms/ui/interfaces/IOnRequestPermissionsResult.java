@@ -5,7 +5,7 @@ package chenmc.sms.ui.interfaces;
  *         Created on 2017/8/11.
  */
 
-public interface OnRequestPermissionsResultListener {
+public interface IOnRequestPermissionsResult {
     /**
      * 请求权限被允许时回调的方法
      * @param requestCode 请求码

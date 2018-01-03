@@ -2,7 +2,6 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--是否使用兼容模式-->
     <CheckBoxPreference
         android:defaultValue="@bool/pref_def_value_compat_mode"
         android:key="compat_mode"
@@ -27,7 +26,7 @@
         android:summary="@string/pref_express_summary"
         android:title="@string/pref_express"/>
 
-    <chenmc.sms.ui.view.TestPreference
+    <chenmc.sms.ui.preference.TestPreference
         android:key="test_rules"
         android:summary="@string/pref_test_rules_summary"
         android:title="@string/pref_test_rules"/>
@@ -40,14 +39,4 @@
     <Preference
         android:key="clear_code_sms"
         android:title="@string/pref_clear_code_sms"/>
-
-    <chenmc.sms.ui.view.ShowPermissionPreference
-        android:defaultValue="@bool/pref_def_value_permission"
-        android:key="permission"
-        android:title="@string/pref_permission"/>
-
-    <chenmc.sms.ui.view.AboutPreference
-        android:defaultValue="@bool/pref_def_value_about"
-        android:key="about"
-        android:title="@string/pref_about"/>
 </PreferenceScreen>

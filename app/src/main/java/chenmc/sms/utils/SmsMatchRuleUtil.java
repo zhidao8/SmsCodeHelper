@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import java.util.Locale;
 
-import chenmc.sms.data.SmsMatchRuleBean;
+import chenmc.sms.data.CustomRuleBean;
 
 /**
  * 处理验证码匹配规则的工具类
@@ -16,32 +16,32 @@ public class SmsMatchRuleUtil {
     /**
      * 对 SmsMatchRuleBean 的实例的处理成功的标志
      *
-     * @see #handleItem(SmsMatchRuleBean)
+     * @see #handleItem(CustomRuleBean)
      */
     public static final int HANDLE_RESULT_SUCCESS = 0;
     
     /**
      * 对 SmsMatchRuleBean 的实例的处理失败的标志。失败原因：包含空内容
      *
-     * @see #handleItem(SmsMatchRuleBean)
+     * @see #handleItem(CustomRuleBean)
      */
     public static final int HANDLE_ERROR_EMPTY_CONTENT = -1;
     
     /**
      * 对 SmsMatchRuleBean 的实例的处理失败的标志。失败原因：短信内容不包含给定的验证码
      *
-     * @see #handleItem(SmsMatchRuleBean)
+     * @see #handleItem(CustomRuleBean)
      */
     public static final int HANDLE_ERROR_NO_CONTAINS = -2;
     
     
     /**
-     * 处理 {@link SmsMatchRuleBean} 实例，分析并生成短信验证码规则
+     * 处理 {@link CustomRuleBean} 实例，分析并生成短信验证码规则
      * @param item SmsMatchRuleBean 实例
      * @return 处理结果码。值可以为 {@link #HANDLE_ERROR_EMPTY_CONTENT}，
      * {@link #HANDLE_ERROR_NO_CONTAINS}，{@link #HANDLE_RESULT_SUCCESS}
      */
-    public static int handleItem(SmsMatchRuleBean item) {
+    public static int handleItem(CustomRuleBean item) {
         String sms = item.getSms();
         String verificationCode = item.getVerificationCode();
        

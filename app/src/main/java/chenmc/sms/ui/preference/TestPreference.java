@@ -1,4 +1,4 @@
-package chenmc.sms.ui.view;
+package chenmc.sms.ui.preference;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import chenmc.sms.code.helper.R;
 import chenmc.sms.transaction.handler.SmsHandler;
-import chenmc.sms.utils.ToastUtil;
 
 /**
  * @author 明 明
@@ -44,14 +43,16 @@ public class TestPreference extends EditTextPreference {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String sms = getEditText().getText().toString();
-                SmsHandler smsHandler = new SmsHandler(getContext(), sms);
-
-                if (!smsHandler.handleSms()) {
-                    ToastUtil.showToast(R.string.can_not_analyse_sms, Toast.LENGTH_SHORT);
+    
+                SmsHandler smsHandler = new SmsHandler(getContext(),
+                    getEditText().getText().toString());
+                if (smsHandler.analyse()) {
+                    smsHandler.handle();
+                } else {
+                    Toast.makeText(getContext(), R.string.can_not_analyse_sms, Toast.LENGTH_SHORT).show();
                 }
-                
             }
         });
     }
+    
 }
