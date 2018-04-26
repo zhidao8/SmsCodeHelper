@@ -1,18 +1,25 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "chenmc.sms.code.helper"
         minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 20171003
-        versionName "3.5"
+        targetSdkVersion 27
+        versionCode 20180421
+        versionName "3.6"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+        }
     }
 
     signingConfigs {
@@ -33,19 +40,28 @@ android {
             // 移除无用的resource文件
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            manifestPlaceholders = [APP_ICON: "@mipmap/ic_launcher"]
         }
         debug {
-            signingConfig signingConfigs.release
+            //在编译打包时会给包名加上后缀
+            applicationIdSuffix '.debug'
+            manifestPlaceholders = [APP_ICON: "@mipmap/ic_launcher_debug"]
         }
     }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(':HeadsUp')
-    compile 'com.android.support:support-v4:25.3.1'
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.android.support:support-v4:$android_support_version"
+    implementation 'android.arch.persistence.room:runtime:1.0.0'
+    kapt "android.arch.persistence.room:compiler:1.0.0"
+}
+repositories {
+    mavenCentral()
 }

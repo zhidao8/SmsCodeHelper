@@ -25,16 +25,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/focusBackground"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:focusable="true" />
 
     <LinearLayout
         android:id="@+id/add_rule_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:clickable="true"
         android:orientation="vertical"
-        android:padding="@dimen/activity_padding">
+        android:padding="@dimen/activity_padding"
+        android:focusable="true">
 
         <EditText
             android:id="@+id/et_sms"

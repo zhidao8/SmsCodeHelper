@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/menu_group_backup">
+    <group android:id="@+id/menu_group_backup"
+        android:visible="false">
         <item
             android:id="@+id/menu_import_rules"
-            android:showAsAction="never"
-            android:title="@string/menu_import_rules"/>
+            android:title="@string/menu_import_rules"
+            android:showAsAction="never" />
         <item
             android:id="@+id/menu_export_rules"
-            android:showAsAction="never"
-            android:title="@string/menu_export_rules"/>
+            android:title="@string/menu_export_rules"
+            android:showAsAction="never" />
     </group>
 
     <item
         android:id="@+id/menu_finish"
         android:icon="@drawable/ic_check_white_24dp"
-        android:showAsAction="ifRoom"
-        android:title="@string/finish"/>
+        android:title="@string/finish"
+        android:showAsAction="ifRoom" />
 </menu>

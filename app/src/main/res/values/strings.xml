@@ -3,9 +3,13 @@
     <string name="app_name">验证码复制</string>
     <string name="compat_mode_need_permission">兼容模式需要读取短信权限</string>
     <string name="require_permission">请允许应用接收短信权限</string>
-    <string name="code_have_been_copied">已复制验证码 %s</string>
-    <string name="developer_mode_on">已开启开发者模式</string>
-    <string name="developer_mode_off">已关闭开发者模式</string>
+    <string name="sms_code_have_been_copied">已复制验证码 %s</string>
+    <string name="express_code_have_been_copied">已复制取件码 %s</string>
+    <string name="text_have_been_copied">已复制 %s</string>
+    <string name="copy_content">复制内容</string>
+    <string name="copy_express_code">复制取件码</string>
+    <string name="advanced_preference_on">已显示高级设置</string>
+    <string name="advanced_preference_off">已隐藏高级设置</string>
     <string name="sms">短信</string>
     <string name="verification_code">验证码</string>
     <string name="sms_content">短信内容</string>
@@ -26,11 +30,17 @@
     <string name="pref_compat_mode">兼容模式</string>
     <string name="pref_compat_mode_summary">常驻后台</string>
     <string name="pref_sms_handle_ways">验证码处理方式</string>
+    <string name="pref_mode">模式</string>
     <string name="pref_copy_immediately">自动复制验证码</string>
     <string name="pref_copy_immediately_summaryOn">自动复制短信中的验证码</string>
     <string name="pref_copy_immediately_summaryOff">验证码将会在通知栏显示</string>
     <string name="pref_read_automatically">自动将短信标记为已读</string>
+    <string name="pref_cancel_notification">自动清除短信通知</string>
     <string name="pref_read_automatically_summary">仍然不能清除通知栏中的短信通知</string>
+    <string name="pref_cancel_notification_summary">需要授予通知使用权</string>
+    <string name="need_accessibility_service">需要开启无障碍</string>
+    <string name="only_support_lollipop_mr1_later">仅支持 Android 5.1 以上系统</string>
+    <string name="only_support_lollipop_later">仅支持 Android 5.0 以上系统</string>
     <string name="pref_notification">通知栏通知</string>
     <string name="pref_notification_summary">通知栏显示验证码和服务商</string>
     <string name="pref_express">解析快递短信</string>
@@ -39,7 +49,7 @@
     <string name="pref_test_rules_summary">测试能否复制短信中的验证码</string>
     <string name="pref_custom_rules">自定义规则</string>
     <string name="pref_custom_rules_summary">自定义短信验证码匹配规则</string>
-    <string name="pref_developer_mode">开发者模式</string>
+    <string name="pref_advanced">高级设置</string>
     <string name="pref_sms_contains">短信包含关键词</string>
     <string name="pref_regexp">验证码匹配规则</string>
     <string name="pref_express_sms_contains">短信包含关键词</string>
@@ -50,6 +60,11 @@
     <string name="pref_about">关于</string>
     <string name="pref_about_summary">版本：%1$s(%2$d)</string>
     <string name="unknown">未知</string>
+    <string name="pref_notification_listener">通知栏使用权</string>
+    <string name="pref_notification_listener_summary">给予应用通知栏使用权后可以自动清除验证码短信通知</string>
+    <string name="pref_notification_listener_summary_api_19">给予应用通知栏使用权后可以自动清除验证码短信通知（Android 4.4 以上）</string>
+    <string name="pref_default_sms_app">设为默认短信应用</string>
+    <string name="pref_default_sms_app_summary">设为默认短信应用后，可以将验证码短信标记为已读。但系统短信的部分功能将无法使用</string>
 
     <string name="choose_export_dir">选择导出目录</string>
     <string name="export_success">导出成功</string>
@@ -73,6 +88,7 @@
     <string name="enable_clear_sms">可清除短信列表</string>
     <string name="delete_fail">删除失败</string>
     <string name="need_set_default_mms">从 Android 4.4 开始，删除系统中的短信需要设置当前应用为默认短信应用。</string>
+    <string name="i_know_not_prompt_again">不再提示</string>
     <string name="dialog_title_delete_all_sms">删除全部短信？</string>
     <string name="dialog_message_delete_all_sms">注意：将会同时删除系统短信，此操作不可撤销</string>
     <string name="dialog_title_delete_all_checked_sms">删除当前选择的短信？</string>
@@ -83,10 +99,12 @@
     <string name="up_to_parent">返回上级目录</string>
     <string name="file_not_choose">文件未选择</string>
     <string name="error_occurred_while_read_sms">读取系统短信时出现异常</string>
-    <string name="if_copy_twice_not_compat_mode">如果在使用过程中发现验证码复制了两次，说明您的手机不需要开启兼容模式</string>
+    <string name="pref_compat_mode_desc">兼容模式需要常驻后台。\n如果在使用过程中发现验证码复制了两次，说明您的手机不需要开启兼容模式。</string>
     <string name="set_read_fail">标记短信已读操作失败</string>
     <string name="category_open_source_address">开源地址</string>
     <string name="category_used_library">使用到的开源库</string>
     <string name="this_function_maybe_unusable">这个功能可能并没有什么用</string>
 
+    <!--无障碍服务-->
+    <string name="accessibility_description">自动将验证码粘贴到输入法光标处</string>
 </resources>

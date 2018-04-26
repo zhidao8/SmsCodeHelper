@@ -16,11 +16,4 @@
             android:summary="zhidao8/SmsCodeHelper"/>
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/category_used_library">
-
-        <Preference
-            android:key="library"
-            android:title="zzz40500/HeadsUp"/>
-    </PreferenceCategory>
 </PreferenceScreen>

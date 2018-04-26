@@ -1,35 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="pref_def_value_compat_mode">false</bool>
-    <bool name="pref_def_value_read_automatically">false</bool>
-    <bool name="pref_def_value_express">false</bool>
-    <bool name="pref_def_value_permission">true</bool>
-    <bool name="pref_def_value_about">false</bool>
-
-    <string name="pref_def_value_sms_contains" translatable="false">
-        (验证|確認|驗證|校验|动态|确认|随机|激活|兑换|认证|交易|授权|操作|提取|安全|登陆|登录|verification |confirmation )(码|碼|代码|代碼|号码|密码|code|コード)|口令|Steam"
-    </string>
-    <string name="pref_def_value_regexp" translatable="false">
-        ((?&lt;!\\d|(联通|尾号|金额|支付|末四位)(为)?)(G-)?\\d{4,6}(?!\\d|年|账|动画))|((?&lt;=(code is|码|碼|コードは)[是为為]?[『「【〖（(：: ]?)(?&lt;![a-zA-Z0-9])[a-zA-Z0-9]{4,6}(?![a-zA-Z0-9]))|((?&lt;!\\w)\\w{4,6}(?!\\w)(?= is your))
-    </string>
-    <string name="pref_def_value_express_sms_contains" translatable="false">
-        快递|快件|单号|订单
-    </string>
-    <string name="pref_def_value_express_regexp" translatable="false">
-        ((?&lt;=(取件码|密码|货码|暗号)[『「【〖（(：: ]?)(?&lt;![a-zA-Z0-9])[a-zA-Z0-9]{4,8}(?![a-zA-Z0-9]))
-    </string>
-
-    <string-array name="pref_def_values_sms_handle_ways" translatable="false">
-        <item>0</item>
+    <!--主页面-->
+    <!--模式-->
+    <string name="pref_key_mode">mode</string>
+    <string-array name="pref_entries_mode">
+        <item>默认模式</item>
+        <item>兼容模式</item>
     </string-array>
-
-    <string-array name="pref_entry_values_sms_handle_ways" translatable="false">
+    <string-array name="pref_entry_values_mode" translatable="false">
         <item>0</item>
         <item>1</item>
     </string-array>
-
+    <string name="pref_def_value_mode">0</string>
+    <!--验证码处理方式-->
+    <string name="pref_key_sms_handle_ways">sms_handle_ways</string>
     <string-array name="pref_entries_sms_handle_ways">
         <item>自动复制</item>
         <item>通知栏显示</item>
     </string-array>
+    <string-array name="pref_entry_values_sms_handle_ways" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="pref_def_values_sms_handle_ways" translatable="false">
+        <item>0</item>
+    </string-array>
+    <!--是否处理取件码-->
+    <string name="pref_key_express">express</string>
+    <bool name="pref_def_value_express">false</bool>
+
+    <string name="pref_key_test_rules">test_rules</string>
+    <string name="pref_key_custom_rules">custom_rules</string>
+    <string name="pref_key_clear_code_sms">clear_code_sms</string>
+
+    <!--高级设置页面-->
+    <!--通知栏使用权-->
+    <string name="pref_key_notification_listener">notification_listener</string>
+    <!--默认短信应用-->
+    <string name="pref_key_default_sms_app">default_sms_app</string>
+    <bool name="pref_def_value_default_sms_app">false</bool>
+    <!--验证码短信关键词-->
+    <string name="pref_key_sms_contains">sms_contains</string>
+    <string name="pref_def_value_sms_contains" translatable="false">
+        (验证|確認|驗證|校验|动态|确认|随机|激活|兑换|认证|交易|授权|操作|提取|安全|登陆|登录|verification |confirmation )(码|碼|代码|代碼|号码|密码|code|コード)|口令|Steam
+    </string>
+    <!--验证码匹配正则-->
+    <string name="pref_key_regexp">regexp</string>
+    <string name="pref_def_value_regexp" translatable="false">
+        ((?&lt;!\\d|(联通|尾号|金额|支付|末四位)(为)?)(G-)?\\d{4,6}(?!\\d|年|账|动画))|((?&lt;=(code is|码|碼|コードは)[是为為]?[『「【〖（(：: ]?)(?&lt;![a-zA-Z0-9])[a-zA-Z0-9]{4,6}(?![a-zA-Z0-9]))|((?&lt;!\\w)\\w{4,6}(?!\\w)(?= is your))
+    </string>
+    <!--取件码短信关键词-->
+    <string name="pref_key_express_sms_contains">express_sms_contains</string>
+    <string name="pref_def_value_express_sms_contains" translatable="false">
+        快递|快件|单号|订单
+    </string>
+    <!--取件码匹配正则-->
+    <string name="pref_key_express_regexp">express_regexp</string>
+    <string name="pref_def_value_express_regexp" translatable="false">
+        ((?&lt;=(取件码|密码|货码|暗号)[『「【〖（(：: ]?)(?&lt;![a-zA-Z0-9])[a-zA-Z0-9]{4,8}(?![a-zA-Z0-9]))
+    </string>
+
+    <!--关于页面-->
+    <string name="pref_key_about">about</string>
+    <string name="pref_key_source_address">source_address</string>
+
+    <!--自定义-->
+    <string name="pref_key_first_launch">first_launch</string>
+    <string name="pref_key_developer_mode">developer_mode</string>
+    <string name="pref_key_first_use_clear_code_sms">first_use_clear_code_sms</string>
+    <string name="pref_key_def_sms_app">sms_default_application</string>
+    <string name="pref_key_value_def_sms_app">com.android.mms</string>
+
+    <bool name="pref_def_value_permission">true</bool>
+    <bool name="pref_def_value_about">false</bool>
 </resources>
