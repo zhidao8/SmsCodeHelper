@@ -1,6 +1,5 @@
 package chenmc.sms.transaction
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ClipData
@@ -62,7 +61,6 @@ class VerificationSmsHandler : ISmsHandler {
     // 在通知栏显示验证码和服务商
     private fun notifyNotification(codeSms: VerificationCodeSms) {
         val notificationId = System.currentTimeMillis().toInt()
-        val channelId = notificationId.toString()
         // 通知标题
         val title = mContext.getString(
                 R.string.code_is,
@@ -74,7 +72,7 @@ class VerificationSmsHandler : ISmsHandler {
                     .putExtra(CopyTextService.EXTRA_VERIFICATION, codeSms.code),
                 PendingIntent.FLAG_UPDATE_CURRENT)
     
-        val builder = NotificationCompat.Builder(mContext, channelId)
+        val builder = NotificationCompat.Builder(mContext, NotificationContract.CHANNEL_ID_VERIFICATION)
             .setContentTitle(title)
             .setContentText(codeSms.content)
             .setTicker(title)
@@ -95,11 +93,6 @@ class VerificationSmsHandler : ISmsHandler {
         }
     
         val notificationManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannel(
-                    NotificationChannel(channelId, title, NotificationManager.IMPORTANCE_HIGH)
-            )
-        }
         notificationManager.notify(notificationId, builder.build())
     }
 }

@@ -1,9 +1,7 @@
 package chenmc.sms.ui.main
 
 import android.app.Activity
-import android.content.ComponentName
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.preference.Preference
@@ -14,7 +12,6 @@ import android.provider.Telephony
 import android.view.MenuItem
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.storage.AppPreference
-import java.util.*
 
 /**
  * Created by 明明 on 2017/8/9.
@@ -50,7 +47,7 @@ class AdvancedPreferenceFragment : PreferenceFragment(), Preference.OnPreference
         }
     
         (findPreference(getString(R.string.pref_key_default_sms_app)) as SwitchPreference).apply {
-            this.isChecked = isMyAppLauncherDefault
+            this.isChecked = isSmsDefaultApp
             this.onPreferenceChangeListener = this@AdvancedPreferenceFragment
         }
         
@@ -146,17 +143,12 @@ class AdvancedPreferenceFragment : PreferenceFragment(), Preference.OnPreference
         
         super.onActivityResult(requestCode, resultCode, data)
     }
-    
-    // 判断当前应用是不是默认应用
-    private val isMyAppLauncherDefault: Boolean
+
+    // 判断当前应用是不是短信默认应用
+    private val isSmsDefaultApp: Boolean
         get() {
-            val preferredActivities = ArrayList<ComponentName>()
-            activity.packageManager.getPreferredActivities(
-                    mutableListOf(IntentFilter(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_HOME) }),
-                    preferredActivities,
-                    activity.packageName
-            )
-            return preferredActivities.size > 0
+            return Settings.Secure.getString(
+                    activity.contentResolver, "sms_default_application") == activity.packageName
         }
     
     companion object {

@@ -18,31 +18,33 @@ import chenmc.sms.code.helper.R
  */
 
 class AboutPreference : Preference {
-    
+
     private var times: Int = 0
-    
+
     var isDeveloperMode: Boolean = false
         private set
-    
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet,
-                defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-    }
-    
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
-    
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
-    
-    constructor(context: Context) : super(context) {}
-    
+    constructor(context: Context, attrs: AttributeSet?,
+                defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+    constructor(context: Context) : super(context)
+
     override fun onGetDefaultValue(a: TypedArray, index: Int): Any {
         return a.getBoolean(index, false)
     }
-    
-    override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any) {
-        isDeveloperMode = if (restorePersistedValue) getPersistedBoolean(false) else defaultValue as Boolean
+
+    override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
+        isDeveloperMode =
+                if (restorePersistedValue || defaultValue == null)
+                    getPersistedBoolean(false)
+                else defaultValue as Boolean
     }
-    
+
     override fun onClick() {
         times++
         if (!isDeveloperMode && times == 10) {
@@ -59,7 +61,7 @@ class AboutPreference : Preference {
             Handler(Looper.getMainLooper()).postDelayed({ callChangeListener(isDeveloperMode) }, 1000)
             notifyDependencyChange(shouldDisableDependents())
             notifyChanged()
-            
+
             // 将变量置为 10 防止触发第一条 if
             times = 10
         }

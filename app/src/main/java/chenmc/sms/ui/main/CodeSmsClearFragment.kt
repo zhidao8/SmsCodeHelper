@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.DataSetObserver
 import android.database.sqlite.SQLiteCantOpenDatabaseException
 import android.net.Uri
@@ -128,12 +129,20 @@ class CodeSmsClearFragment : PermissionFragment(), View.OnClickListener, ActionM
     
     override fun onDestroy() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            
-            val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
-            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, AppPreference.defaultSmsApp)
-            startActivity(intent)
-            
-            Toast.makeText(activity, R.string.change_default_mms_to_default, Toast.LENGTH_LONG).show()
+
+            try {
+                val defaultSmsApp = AppPreference.defaultSmsApp
+                // 尝试获取应用信息，如果抛出异常，则该应用不存在
+                activity.packageManager.getApplicationInfo(defaultSmsApp, 0)
+
+                val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+                intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, defaultSmsApp)
+                startActivity(intent)
+
+                Toast.makeText(activity, R.string.change_default_mms_to_default, Toast.LENGTH_LONG).show()
+            } catch (e: PackageManager.NameNotFoundException) {
+                // ignored
+            }
         }
         super.onDestroy()
     }
@@ -502,18 +511,18 @@ class CodeSmsClearFragment : PermissionFragment(), View.OnClickListener, ActionM
          */
         private fun getCodeSmsFromDatabase(context: Context): List<Item> {
             val list = ArrayList<Item>()
-            
+
             val cr = context.contentResolver
             // 获取接收到的短信（type = 1）
-            val where = "type = 1"
             val cur = cr.query(Uri.parse("content://sms/"),
-                    arrayOf("_id", "body"), where, null, "date desc") ?: return list
-            
+                    arrayOf("_id", "body"), "type = ?", arrayOf(1.toString()), "date desc") ?: return list
+
             try {
+                val smsAnalyzer = SmsAnalyzer(context)
+
                 while (cur.moveToNext()) {
                     val sms = cur.getString(cur.getColumnIndex("body"))
-                    
-                    val smsAnalyzer = SmsAnalyzer(context)
+
                     val vcs = smsAnalyzer.analyseVerificationSms(sms)
                     val ecs = smsAnalyzer.analyseExpressSms(sms)
                     

@@ -22,10 +22,11 @@ class SmsNotificationListenerService : NotificationListenerService() {
         when (sbn.packageName) {
             "com.android.mms", "com.google.android.apps.messaging" -> {
                 val extras = sbn.notification.extras
+
                 val smsAnalyzer = SmsAnalyzer(context)
                 val verificationCodeSms =
-                    smsAnalyzer.analyseVerificationSms(extras[Notification.EXTRA_TITLE].toString())
-                    ?: smsAnalyzer.analyseVerificationSms(extras[Notification.EXTRA_TEXT].toString())
+                    smsAnalyzer.analyseVerificationSms(extras[Notification.EXTRA_TITLE]?.toString() ?: "")
+                    ?: smsAnalyzer.analyseVerificationSms(extras[Notification.EXTRA_TEXT]?.toString() ?: "")
                 if (verificationCodeSms != null) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         cancelNotification(sbn.key)

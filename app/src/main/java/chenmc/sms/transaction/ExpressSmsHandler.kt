@@ -1,6 +1,5 @@
 package chenmc.sms.transaction
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -36,11 +35,10 @@ class ExpressSmsHandler : ISmsHandler {
     // 在通知栏显示验证码和服务商
     private fun notifyNotification(codeSms: ExpressCodeSms) {
         val notificationId = System.currentTimeMillis().toInt()
-        val channelId = notificationId.toString()
         val title = context.getString(R.string.express_is, codeSms.serviceProvider, codeSms.code)
         val copyText = title + if (codeSms.content != null) "\n${codeSms.content}" else ""
     
-        val builder = NotificationCompat.Builder(context, channelId)
+        val builder = NotificationCompat.Builder(context, NotificationContract.CHANNEL_ID_EXPRESS)
             .setContentTitle(title)
             .setTicker(copyText)
             .setContentText(codeSms.content)
@@ -67,11 +65,6 @@ class ExpressSmsHandler : ISmsHandler {
         }
     
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannel(
-                    NotificationChannel(channelId, title, NotificationManager.IMPORTANCE_HIGH)
-            )
-        }
         notificationManager.notify(notificationId, builder.build())
     }
 }

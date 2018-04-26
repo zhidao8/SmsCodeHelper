@@ -5,10 +5,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Fragment
-import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -34,8 +32,6 @@ import chenmc.sms.data.storage.AppPreference
 import chenmc.sms.transaction.service.SmsObserverService
 import chenmc.sms.ui.app.PermissionPreferenceFragment
 import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult
-import java.util.*
-import kotlin.collections.LinkedHashSet
 
 /**
  * Created by 明明 on 2017/8/9.
@@ -64,16 +60,11 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
         }
     }
     
-    // 判断当前应用是不是默认应用
-    private val isMyAppLauncherDefault: Boolean
+    // 判断当前应用是不是短信默认应用
+    private val isSmsDefaultApp: Boolean
         get() {
-            val preferredActivities = ArrayList<ComponentName>()
-            activity.packageManager.getPreferredActivities(
-                    mutableListOf(IntentFilter(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_HOME) }),
-                    preferredActivities,
-                    activity.packageName
-            )
-            return preferredActivities.size > 0
+            return Settings.Secure.getString(
+                    activity.contentResolver, "sms_default_application") == activity.packageName
         }
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -262,12 +253,12 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             }
             getString(R.string.pref_key_clear_code_sms) -> {
                 // 清除所有验证码短信
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !isMyAppLauncherDefault) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !isSmsDefaultApp) {
                     // 如果安卓版本大于等于 4.4，并且当前应用不是默认启动应用
                     
                     // 先将当前默认启动应用保存起来
                     AppPreference.defaultSmsApp = Settings.Secure.getString(
-                            activity.contentResolver, "sms_default_application")
+                            activity.contentResolver, "sms_default_application") ?: ""
                     
                     // Android 4.4 及以上的版本中，需要设置默认短信应用才能删除短信
                     val confirmListener = DialogInterface.OnClickListener { _, which ->
