@@ -27,16 +27,20 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.storage.AppDatabase
 import chenmc.sms.data.storage.AppDatabaseWrapper
+import chenmc.sms.data.storage.CustomRulesBackuper
 import chenmc.sms.data.storage.SmsCodeRegex
 import chenmc.sms.data.storage.SmsCodeRegexDao
 import chenmc.sms.ui.app.PermissionFragment
 import chenmc.sms.ui.interfaces.IOnBackPressedActivity
 import chenmc.sms.ui.interfaces.IOnBackPressedFragment
 import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult
-import chenmc.sms.utils.SmsMatchRuleUtil
+import chenmc.sms.util.FileChooserDialog
+import chenmc.sms.util.SmsMatchRuleUtil
+import chenmc.sms.util.ToastUtil
 import com.melnykov.fab.FloatingActionButton
 import java.lang.ref.WeakReference
 
@@ -105,8 +109,7 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
         listView.onItemClickListener = listener
         listView.onItemLongClickListener = listener
 
-        ensureDatabase()
-        ReadDataTask(adapter, smsCodeRegexDao).execute()
+        refreshData()
     }
 
     private fun ensureDatabase() {
@@ -116,6 +119,11 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
 
             _database = database
         }
+    }
+
+    private fun refreshData() {
+        ensureDatabase()
+        ReadDataTask(adapter, smsCodeRegexDao).execute()
     }
 
     override fun onStart() {
@@ -150,62 +158,48 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
     }
 
     private fun handleRequestPermissionsResult(requestCode: Int) {
-        /*when (requestCode) {
-
-        }*//*case REQUEST_CODE_READ_STORAGE:
-                new FileChooserDialog.Builder(getActivity())
+        when (requestCode) {
+            REQUEST_CODE_READ_STORAGE -> {
+                FileChooserDialog.Builder(activity)
                     .setTitle(R.string.choose_import_dir)
                     .setChooseType(FileChooserDialog.TYPE_FILE)
-                    .setFileType("db")
-                    .setOnClickListener(new FileChooserDialog.OnClickListener() {
-                        @Override
-                        public void onClick(int which, File chooseFile) {
-                            File databaseDir = getActivity().getDatabasePath(
-                                DatabaseHelper.DATABASE_NAME).getParentFile();
-                            if (chooseFile != null) {
-                                String chooseFileName = chooseFile.getName();
-                                File dest = new File(chooseFile.getParentFile(), DatabaseHelper.DATABASE_NAME);
-                                boolean renameSuccess = chooseFile.renameTo(dest);
-                                int textId =
-                                    renameSuccess && FileHelper.copyFile(dest, databaseDir) ?
-                                        R.string.import_success : R.string.import_fail;
-                                ToastUtil.showToast(textId, Toast.LENGTH_SHORT);
-                                
-                                if (renameSuccess)
-                                    FileHelper.renameFile(dest, chooseFileName);
-                                
-                                adapter.init();
+                    .setOnClickListener { _, chooseFile ->
+                        if (chooseFile != null) {
+                            val successful = CustomRulesBackuper(smsCodeRegexDao).restore(chooseFile)
+                            if (successful) {
+                                refreshData()
+                                ToastUtil.showToast(R.string.import_success, Toast.LENGTH_SHORT)
                             } else {
-                                ToastUtil.showToast(getString(R.string.file_not_choose), Toast.LENGTH_SHORT);
+                                ToastUtil.showToast(R.string.import_fail, Toast.LENGTH_SHORT)
                             }
-                            
+                        } else {
+                            ToastUtil.showToast(R.string.file_not_choose, Toast.LENGTH_SHORT)
                         }
-                    })
+                    }
                     .create()
-                    .show();
-                break;
-            case REQUEST_CODE_WRITE_STORAGE:
-                new FileChooserDialog.Builder(getActivity())
+                    .show()
+            }
+            REQUEST_CODE_WRITE_STORAGE -> {
+                FileChooserDialog.Builder(activity)
                     .setChooseType(FileChooserDialog.TYPE_DIR)
                     .setTitle(R.string.choose_export_dir)
-                    .setOnClickListener(new FileChooserDialog.OnClickListener() {
-                        @Override
-                        public void onClick(int which, File chooseFile) {
-                            File database = getActivity().getDatabasePath(
-                                DatabaseHelper.DATABASE_NAME);
-                            int textId = FileHelper.copyFile(database, chooseFile) ?
-                                R.string.export_success : R.string.export_fail;
-                            ToastUtil.showToast(textId, Toast.LENGTH_SHORT);
+                    .setOnClickListener { _, chooseFile ->
+                        if (chooseFile != null && chooseFile.exists()) {
+                            CustomRulesBackuper(smsCodeRegexDao).backup(chooseFile)
+                            ToastUtil.showToast(R.string.export_success, Toast.LENGTH_SHORT)
+                        } else {
+                            ToastUtil.showToast(R.string.export_fail, Toast.LENGTH_SHORT)
                         }
-                    })
+                    }
                     .create()
-                    .show();
-                break;*/
+                    .show()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_code_match_rules, menu)
+        inflater.inflate(R.menu.menu_custom_rules, menu)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

@@ -2,8 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/menu_group_backup"
-        android:visible="false">
+    <group android:id="@+id/menu_group_backup">
         <item
             android:id="@+id/menu_import_rules"
             android:title="@string/menu_import_rules"

@@ -9,8 +9,8 @@ import android.os.Build
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.storage.AppPreference
 import chenmc.sms.transaction.NotificationContract
-import chenmc.sms.utils.CrashHandler
-import chenmc.sms.utils.LogUtil
+import chenmc.sms.util.CrashHandler
+import chenmc.sms.util.LogUtil
 
 /**
  * @author 明 明

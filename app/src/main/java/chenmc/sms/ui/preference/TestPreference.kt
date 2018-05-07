@@ -38,7 +38,7 @@ class TestPreference : EditTextPreference {
             val sms = editText.text.toString()
             
             // 创建一个短信执行器
-            val executor = SmsHandlerExecutor(context, sms)
+            val executor = SmsHandlerExecutor(context)
             
             // 分析文本内容是否符合验证码短信或取件码短信的格式
             val smsAnalyzer = SmsAnalyzer(context)
@@ -46,7 +46,7 @@ class TestPreference : EditTextPreference {
             val expressCodeSms = smsAnalyzer.analyseExpressSms(sms)
             
             if (verificationCodeSms != null || AppPreference.expressEnable && expressCodeSms != null) {
-                executor.execute()
+                executor.execute(sms)
             } else {
                 Toast.makeText(context, R.string.can_not_analyse_sms, Toast.LENGTH_SHORT).show()
             }

@@ -1,4 +1,4 @@
-package chenmc.sms.utils
+package chenmc.sms.util
 
 import android.content.Context
 import android.content.pm.ApplicationInfo

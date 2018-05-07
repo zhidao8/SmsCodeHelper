@@ -18,7 +18,7 @@ import chenmc.sms.transaction.SmsHandlerExecutor
 
 class SmsReceiveService : Service() {
     
-    private lateinit var mServiceHandler: Handler
+    private lateinit var serviceHandler: Handler
     
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -31,16 +31,16 @@ class SmsReceiveService : Service() {
                 Process.THREAD_PRIORITY_MORE_FAVORABLE)
         handlerThread.start()
         
-        mServiceHandler = ServiceHandler(handlerThread.looper)
+        serviceHandler = ServiceHandler(handlerThread.looper)
     }
     
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val msg = mServiceHandler.obtainMessage()
+        val msg = serviceHandler.obtainMessage()
         // 保存 startId
         msg.arg1 = startId
         // 保存 intent 到 msg.obj
         msg.obj = intent
-        mServiceHandler.sendMessage(msg)
+        serviceHandler.sendMessage(msg)
         
         return Service.START_NOT_STICKY
     }
@@ -49,19 +49,20 @@ class SmsReceiveService : Service() {
         super.onDestroy()
         
         // Service 停止时停止线程
-        mServiceHandler.looper.quit()
+        serviceHandler.looper.quit()
     }
     
     private inner class ServiceHandler internal constructor(looper: Looper) : Handler(looper) {
-        
+
+        private val smsHandlerExecutor: SmsHandlerExecutor = SmsHandlerExecutor(this@SmsReceiveService)
+
         override fun handleMessage(msg: Message) {
             val intent = msg.obj as Intent
-            val context = this@SmsReceiveService
     
             // 从 Intent 中获取短信内容
             val sms = SmsExtractor.extractFromIntent(intent)
-            // 创建一个短信执行器并执行
-            SmsHandlerExecutor(context, sms).execute()
+            // 短信执行器执行
+            smsHandlerExecutor.execute(sms)
             
             // 使用 startId 停止 Service
             stopSelfResult(msg.arg1)

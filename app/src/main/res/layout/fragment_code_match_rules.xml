@@ -54,7 +54,7 @@
             android:layout_marginBottom="@dimen/activity_padding"
             android:hint="@string/sms_verification_code"
             android:imeOptions="actionDone"
-            android:inputType="number"
+            android:inputType="text"
             android:maxLines="1"
             android:textSize="@dimen/default_edit_text_size" />
 

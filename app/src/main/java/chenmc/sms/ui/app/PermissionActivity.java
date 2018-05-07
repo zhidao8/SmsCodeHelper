@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import chenmc.sms.code.helper.R;
 import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult;
-import chenmc.sms.utils.TransparentBarUtils;
+import chenmc.sms.util.TransparentBarUtils;
 
 /**
  * Created by 明明 on 2017/8/9.

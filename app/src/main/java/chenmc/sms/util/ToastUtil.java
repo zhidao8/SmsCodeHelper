@@ -1,4 +1,4 @@
-package chenmc.sms.utils;
+package chenmc.sms.util;
 
 import android.os.Bundle;
 import android.os.Handler;

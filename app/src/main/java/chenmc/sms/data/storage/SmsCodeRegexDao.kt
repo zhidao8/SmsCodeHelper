@@ -16,7 +16,7 @@ import android.arch.persistence.room.Update
 @Dao
 interface SmsCodeRegexDao {
     @Query("SELECT * FROM ${AppDatabaseContract.SmsCodeRegex.TABLE}")
-    fun loadAll(): List<SmsCodeRegex>
+    fun loadAll(): MutableList<SmsCodeRegex>
     
     /**
      * 返回每一条插入到数据库中的记录的 rowId

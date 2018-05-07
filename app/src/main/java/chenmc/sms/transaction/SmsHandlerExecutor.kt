@@ -9,9 +9,9 @@ import chenmc.sms.transaction.service.SetReadService
  * @author Carter
  * Created on 2018-02-06
  */
-class SmsHandlerExecutor(private val context: Context, private val sms: String) {
+class SmsHandlerExecutor(private val context: Context) {
     
-    fun execute() {
+    fun execute(sms: String) {
         var handled = VerificationSmsHandler().handle(context, sms)
         
         // 如果应用开启了解析快递取件码短信

@@ -14,7 +14,7 @@ import chenmc.sms.code.helper.R
 import chenmc.sms.data.VerificationCodeSms
 import chenmc.sms.data.storage.AppPreference
 import chenmc.sms.transaction.service.CopyTextService
-import chenmc.sms.utils.ToastUtil
+import chenmc.sms.util.ToastUtil
 import java.util.*
 
 
@@ -45,7 +45,8 @@ class VerificationSmsHandler : ISmsHandler {
         val entryValues = mContext.resources.getStringArray(R.array.pref_entry_values_sms_handle_ways)
         valuesSet = AppPreference.smsHandleWays
         // 应用开启了自动复制验证码
-        if (valuesSet.contains(entryValues[0])) {// 获取系统剪切板
+        if (valuesSet.contains(entryValues[0])) {
+            // 获取系统剪切板
             val clipboardManager = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboardManager.primaryClip = ClipData.newPlainText("code", codeSms.code)
             ToastUtil.showToast(

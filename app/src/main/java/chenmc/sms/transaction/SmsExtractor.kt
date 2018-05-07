@@ -2,6 +2,7 @@ package chenmc.sms.transaction
 
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.telephony.SmsMessage
@@ -54,7 +55,7 @@ object SmsExtractor {
         val cr = context.contentResolver
         // 获取接收到的短信（type = 1），并且只获取 5 秒以内的消息
         val where = "type = 1 and date > " + (System.currentTimeMillis() - 5000)
-        val cursor = cr.query(Uri.parse("content://sms/"),
+        val cursor: Cursor? = cr.query(Uri.parse("content://sms/"),
                 arrayOf("_id", "body"), where, null, "date desc")
         
         if (cursor?.moveToFirst() == true) {
@@ -63,7 +64,8 @@ object SmsExtractor {
                     cursor.getInt(cursor.getColumnIndex("_id"))
             )
         }
-        cursor.close()
+        cursor?.close()
+
         return databaseSms
     }
     

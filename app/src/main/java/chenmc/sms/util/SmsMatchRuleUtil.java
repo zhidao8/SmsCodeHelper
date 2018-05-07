@@ -1,4 +1,4 @@
-package chenmc.sms.utils;
+package chenmc.sms.util;
 
 import android.text.TextUtils;
 
