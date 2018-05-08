@@ -23,10 +23,10 @@ import java.util.*
  * Created on 2018-02-06
  */
 class VerificationSmsHandler : ISmsHandler {
-    private lateinit var mContext: Context
+    private lateinit var context: Context
     
     override fun handle(context: Context, sms: String): Boolean {
-        mContext = context.applicationContext
+        this.context = context.applicationContext
         
         val codeSms = SmsAnalyzer(context).analyseVerificationSms(sms) ?: return false
         
@@ -40,17 +40,17 @@ class VerificationSmsHandler : ISmsHandler {
         var valuesSet: MutableSet<String> = HashSet(2)
         Collections.addAll(
                 valuesSet,
-                *mContext.resources.getStringArray(R.array.pref_def_values_sms_handle_ways)
+                *context.resources.getStringArray(R.array.pref_def_values_sms_handle_ways)
         )
-        val entryValues = mContext.resources.getStringArray(R.array.pref_entry_values_sms_handle_ways)
+        val entryValues = context.resources.getStringArray(R.array.pref_entry_values_sms_handle_ways)
         valuesSet = AppPreference.smsHandleWays
         // 应用开启了自动复制验证码
         if (valuesSet.contains(entryValues[0])) {
             // 获取系统剪切板
-            val clipboardManager = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboardManager.primaryClip = ClipData.newPlainText("code", codeSms.code)
             ToastUtil.showToast(
-                    mContext.getString(R.string.sms_code_have_been_copied, codeSms.code),
+                    context.getString(R.string.sms_code_have_been_copied, codeSms.code),
                     Toast.LENGTH_LONG)
         }
         // 应用开启了通知栏显示，在通知栏显示验证码
@@ -63,17 +63,17 @@ class VerificationSmsHandler : ISmsHandler {
     private fun notifyNotification(codeSms: VerificationCodeSms) {
         val notificationId = System.currentTimeMillis().toInt()
         // 通知标题
-        val title = mContext.getString(
+        val title = context.getString(
                 R.string.code_is,
                 codeSms.serviceProvider,
                 codeSms.code)
         
-        val contentIntent = PendingIntent.getService(mContext, notificationId,
-                Intent(mContext, CopyTextService::class.java)
+        val contentIntent = PendingIntent.getService(context, notificationId,
+                Intent(context, CopyTextService::class.java)
                     .putExtra(CopyTextService.EXTRA_VERIFICATION, codeSms.code),
                 PendingIntent.FLAG_UPDATE_CURRENT)
     
-        val builder = NotificationCompat.Builder(mContext, NotificationContract.CHANNEL_ID_VERIFICATION)
+        val builder = NotificationCompat.Builder(context, NotificationContract.CHANNEL_ID_VERIFICATION)
             .setContentTitle(title)
             .setContentText(codeSms.content)
             .setTicker(title)
@@ -88,12 +88,12 @@ class VerificationSmsHandler : ISmsHandler {
     
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setSmallIcon(R.drawable.ic_notification)
-                .color = ContextCompat.getColor(mContext, R.color.colorPrimary)
+                .color = ContextCompat.getColor(context, R.color.colorPrimary)
         } else {
             builder.setSmallIcon(R.mipmap.ic_launcher)
         }
     
-        val notificationManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, builder.build())
     }
 }

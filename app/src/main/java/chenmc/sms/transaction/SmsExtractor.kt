@@ -69,7 +69,5 @@ object SmsExtractor {
         return databaseSms
     }
     
-    const val PROVIDER_REGEXP = "(【.+?】|\\[.+?\\])"
-    
     data class DatabaseSms(val sms: String, val databaseId: Int = -1)
 }

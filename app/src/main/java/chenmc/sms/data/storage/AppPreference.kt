@@ -57,32 +57,38 @@ object AppPreference {
             .putBoolean(context.getString(R.string.pref_key_about), value)
             .apply()
     
-    /*---------开发者页面----------*/
-    
+    /*---------高级设置页面----------*/
+
+    const val defaultProviderRegex: String = "(【.+?】|\\[.+?\\])"
+
+    const val defaultSmsKeyword: String = "(验证|確認|驗證|校验|动态|确认|随机|激活|兑换|认证|交易|授权|操作|提取|安全|登陆|登录|verification |confirmation )(码|碼|代码|代碼|号码|密码|code|コード)|口令|Steam"
+
+    const val defaultSmsRegex: String = "((?<!\\d|(联通|尾号|金额|支付|末四位)(为)?)(G-)?\\d{4,8}(?!\\d|年|账|动画))|((?<=(code is|码|碼|コードは)[是为為]?[『「【〖（(：: ]?)(?<![a-zA-Z0-9])[a-zA-Z0-9]{4,8}(?![a-zA-Z0-9]))|((?<!\\w)\\w{4,8}(?!\\w)(?= is your))"
+
+    const val defaultExpressKeyword: String = "快递|快件|单号|订单"
+
+    const val defaultExpressRegex: String = "((?<=(取件码|密码|货码|暗号)[『「【〖（(：: ]?)(?<![a-zA-Z0-9])[a-zA-Z0-9]{4,8}(?![a-zA-Z0-9]))"
+
     var smsKeyword: String
-        get() = sp.getString(context.getString(R.string.pref_key_sms_contains),
-                context.getString(R.string.pref_def_value_sms_contains))
+        get() = sp.getString(context.getString(R.string.pref_key_sms_contains), "")
         set(value) = sp.edit()
             .putString(context.getString(R.string.pref_key_sms_contains), value)
             .apply()
     
     var smsRegex: String
-        get() = sp.getString(context.getString(R.string.pref_key_regexp),
-                context.getString(R.string.pref_def_value_regexp))
+        get() = sp.getString(context.getString(R.string.pref_key_regexp), "")
         set(value) = sp.edit()
             .putString(context.getString(R.string.pref_key_regexp), value)
             .apply()
     
     var expressKeyword: String
-        get() = sp.getString(context.getString(R.string.pref_key_express_sms_contains),
-                context.getString(R.string.pref_def_value_express_sms_contains))
+        get() = sp.getString(context.getString(R.string.pref_key_express_sms_contains), "")
         set(value) = sp.edit()
             .putString(context.getString(R.string.pref_key_express_sms_contains), value)
             .apply()
     
     var expressRegex: String
-        get() = sp.getString(context.getString(R.string.pref_key_express_regexp),
-                context.getString(R.string.pref_def_value_express_regexp))
+        get() = sp.getString(context.getString(R.string.pref_key_express_regexp), "")
         set(value) = sp.edit()
             .putString(context.getString(R.string.pref_key_express_regexp), value)
             .apply()

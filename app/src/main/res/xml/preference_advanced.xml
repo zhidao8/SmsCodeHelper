@@ -16,26 +16,22 @@
 
     <PreferenceCategory android:title="@string/pref_cate_code">
 
-        <chenmc.sms.ui.preference.DefaultEditTextPreference
-            android:defaultValue="@string/pref_def_value_sms_contains"
+        <EditTextPreference
             android:key="@string/pref_key_sms_contains"
             android:title="@string/pref_sms_contains" />
 
-        <chenmc.sms.ui.preference.DefaultEditTextPreference
-            android:defaultValue="@string/pref_def_value_regexp"
+        <EditTextPreference
             android:key="@string/pref_key_regexp"
             android:title="@string/pref_regexp" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_cate_express">
 
-        <chenmc.sms.ui.preference.DefaultEditTextPreference
-            android:defaultValue="@string/pref_def_value_express_sms_contains"
+        <EditTextPreference
             android:key="@string/pref_key_express_sms_contains"
             android:title="@string/pref_express_sms_contains" />
 
-        <chenmc.sms.ui.preference.DefaultEditTextPreference
-            android:defaultValue="@string/pref_def_value_express_regexp"
+        <EditTextPreference
             android:key="@string/pref_key_express_regexp"
             android:title="@string/pref_express_regexp" />
     </PreferenceCategory>

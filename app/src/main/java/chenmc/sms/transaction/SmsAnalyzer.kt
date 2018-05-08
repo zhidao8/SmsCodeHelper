@@ -9,6 +9,7 @@ import chenmc.sms.data.storage.AppPreference
 import chenmc.sms.data.storage.SmsCodeRegex
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.collections.ArrayList
 
 /**
  * @author Carter
@@ -16,7 +17,7 @@ import java.util.regex.Pattern
  */
 class SmsAnalyzer(context: Context) {
 
-    private val mContext = context.applicationContext
+    private val context = context.applicationContext
 
     private companion object {
         // 缓存
@@ -32,9 +33,9 @@ class SmsAnalyzer(context: Context) {
     fun analyseVerificationSms(sms: String): VerificationCodeSms? {
 
         // 从数据库查询验证码匹配模板
-        val regexList = if (regexListCache == null || System.currentTimeMillis() - updateTime > 10000) {
+        val codeRegexList = if (regexListCache == null || System.currentTimeMillis() - updateTime > 10000) {
             // 如果缓存已超过10秒，更新缓存；缓存保留10秒是为了防止频繁访问数据库
-            val database = AppDatabaseWrapper(mContext).database
+            val database = AppDatabaseWrapper(context).database
             val all = database.smsCodeRegexDao().loadAll()
             database.close()
             regexListCache = all
@@ -42,7 +43,7 @@ class SmsAnalyzer(context: Context) {
         } else regexListCache!!
 
         // 短信内容与逐个模板进行匹配
-        for (bean in regexList) {
+        for (bean in codeRegexList) {
             val pattern = Pattern.compile(bean.regex)
             val matcher = pattern.matcher(sms)
             // 如果验证码匹配成功
@@ -53,32 +54,44 @@ class SmsAnalyzer(context: Context) {
 
                 // 提取短信中的服务商
                 codeSms.serviceProvider = extractProvider(sms)
-                codeSms.content = mContext.getString(R.string.click_to_copy)
+                codeSms.content = context.getString(R.string.click_to_copy)
 
                 return codeSms
             }
         }
 
-        // 使用正则表达式匹配短信内容
+        val keywordList = ArrayList<String>(2)
+        val regexList = ArrayList<String>(2)
         val smsKeyword = AppPreference.smsKeyword
         val smsRegex = AppPreference.smsRegex
-        if (sms.matches("(.|\n)*($smsKeyword)(.|\n)*".toRegex())) {
-            val pattern = Pattern.compile(smsRegex)
-            val matcher = pattern.matcher(sms)
-            if (matcher.find()) {
-                // 获取短信中所有可能是验证码的字符串
-                val codeList = ArrayList<String>(3)
-                do {
-                    codeList.add(matcher.group())
-                } while (matcher.find())
 
-                // 获取最佳（可能）的验证码
-                val codeSms = VerificationCodeSms(getBestCode(sms, codeList))
-                // 提取短信中的服务商
-                codeSms.serviceProvider = extractProvider(sms)
-                codeSms.content = mContext.getString(R.string.click_to_copy)
+        if (!smsKeyword.trim().isEmpty()) keywordList.add(smsKeyword)
+        if (!smsRegex.trim().isEmpty()) regexList.add(smsRegex)
+        keywordList.add(AppPreference.defaultSmsKeyword)
+        regexList.add(AppPreference.defaultSmsRegex)
 
-                return codeSms
+        // 使用正则表达式匹配短信内容
+        for (keyword in keywordList) {
+            if (sms.matches("(.|\n)*($keyword)(.|\n)*".toRegex())) {
+
+                for (regex in regexList) {
+                    val matcher = Pattern.compile(regex).matcher(sms)
+                    if (matcher.find()) {
+                        // 获取短信中所有可能是验证码的字符串
+                        val codeList = ArrayList<String>(3)
+                        do {
+                            codeList.add(matcher.group())
+                        } while (matcher.find())
+
+                        // 获取最佳（可能）的验证码
+                        val codeSms = VerificationCodeSms(getBestCode(sms, codeList))
+                        // 提取短信中的服务商
+                        codeSms.serviceProvider = extractProvider(sms)
+                        codeSms.content = context.getString(R.string.click_to_copy)
+
+                        return codeSms
+                    }
+                }
             }
         }
 
@@ -88,17 +101,16 @@ class SmsAnalyzer(context: Context) {
     // 提取短信中的服务商
     private fun extractProvider(sms: String): String {
         // 匹配短信中的服务商
-        val paSource = Pattern.compile(SmsExtractor.PROVIDER_REGEXP)
-        val maSource = paSource.matcher(sms)
-        if (maSource.find()) {
+        val matcher = Pattern.compile(AppPreference.defaultProviderRegex).matcher(sms)
+        if (matcher.find()) {
             // 获取短信中的验证码
-            return maSource.group()
+            return matcher.group()
         }
         return ""
     }
 
     // 当从短信中匹配得到多个验证码时，通过赋予每个验证码不同的优先级（验证码的可能性），
-// 选出最有可能是验证码的字符串
+    // 选出最有可能是验证码的字符串
     private fun getBestCode(sms: String, codeList: List<String>): String {
         if (codeList.size == 1) return codeList[0]
 
@@ -161,29 +173,39 @@ class SmsAnalyzer(context: Context) {
      * 如果是返回 [ExpressCodeSms] ，如果不是返回 null
      */
     fun analyseExpressSms(sms: String): ExpressCodeSms? {
+
+        val keywordList = ArrayList<String>(2)
+        val regexList = ArrayList<String>(2)
         val expressKeyword = AppPreference.expressKeyword
         val expressRegex = AppPreference.expressRegex
 
-        if (sms.matches("(.|\n)*($expressKeyword)(.|\n)*".toRegex())) {
-            val codeMatcher = Pattern.compile(expressRegex).matcher(sms)
-            if (codeMatcher.find()) {
-                // 获取短信中的取件码
-                val codeSms = ExpressCodeSms(codeMatcher.group())
+        if (!expressKeyword.trim().isEmpty()) keywordList.add(expressKeyword)
+        if (!expressRegex.trim().isEmpty()) regexList.add(expressRegex)
+        keywordList.add(AppPreference.defaultExpressKeyword)
+        regexList.add(AppPreference.defaultExpressRegex)
 
-                val sourceMatcher = Pattern.compile(SmsExtractor.PROVIDER_REGEXP).matcher(sms)
-                if (sourceMatcher.find()) {
-                    // 获取短信中的服务商
-                    codeSms.serviceProvider = sourceMatcher.group()
-                }
-                val addressMatcher = Pattern.compile(
-                        "(?<=快递已到)\\w*(?=[,.，。])"
-                ).matcher(sms)
-                if (addressMatcher.find()) {
-                    // 获取短信中的地址
-                    codeSms.content = addressMatcher.group()
-                }
+        for (keyword in keywordList) {
+            if (sms.matches("(.|\n)*($keyword)(.|\n)*".toRegex())) {
 
-                return codeSms
+                for (regex in regexList) {
+                    val codeMatcher = Pattern.compile(regex).matcher(sms)
+                    if (codeMatcher.find()) {
+                        // 获取短信中的取件码
+                        val codeSms = ExpressCodeSms(codeMatcher.group())
+
+                        // 获取短信中的服务商
+                        codeSms.serviceProvider = extractProvider(sms)
+                        val addressMatcher = Pattern.compile(
+                                "(?<=快递已到)\\w*(?=[,.，。])"
+                        ).matcher(sms)
+                        if (addressMatcher.find()) {
+                            // 获取短信中的地址
+                            codeSms.content = addressMatcher.group()
+                        }
+
+                        return codeSms
+                    }
+                }
             }
         }
 
