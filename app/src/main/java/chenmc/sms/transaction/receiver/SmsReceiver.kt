@@ -14,8 +14,8 @@ import chenmc.sms.transaction.service.SmsReceiveService
 
 class SmsReceiver : BroadcastReceiver() {
     
-    override fun onReceive(context: Context, intent: Intent) {
-        when (intent.action) {
+    override fun onReceive(context: Context, intent: Intent?) {
+        when (intent?.action) {
             Telephony.Sms.Intents.SMS_RECEIVED_ACTION -> {
                 // 打开一个服务进行相关处理
                 intent.setClass(context, SmsReceiveService::class.java)

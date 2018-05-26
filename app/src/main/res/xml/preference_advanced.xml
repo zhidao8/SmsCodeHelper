@@ -34,5 +34,9 @@
         <EditTextPreference
             android:key="@string/pref_key_express_regexp"
             android:title="@string/pref_express_regexp" />
+
+        <EditTextPreference
+            android:key="@string/pref_key_express_place_regexp"
+            android:title="@string/pref_express_place_regexp" />
     </PreferenceCategory>
 </PreferenceScreen>

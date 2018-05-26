@@ -46,11 +46,13 @@ class CustomRulesBackuper {
         val timeString = timeFormatter.format(Date())
         val file = File(dir, "$timeString.$packageName")
 
+        // 将 JsonElement 写入到文件中
         val jsonWriter = JsonWriter(FileWriter(file))
         gson.toJson(jsonElement, jsonWriter)
         jsonWriter.flush()
     }
 
+    // 将 List 转换为 JsonElement
     private fun toJsonElement(list: MutableList<SmsCodeRegex>): JsonElement {
         val result = JsonArray(list.size)
         list.forEach {
@@ -70,9 +72,7 @@ class CustomRulesBackuper {
     fun restore(file: File): Boolean {
         try {
             val result = fromFile(file)
-            result.forEach {
-                dao.insert(it)
-            }
+            dao.insert(*result.toTypedArray())
         } catch (e: JsonSyntaxException) {
             e.printStackTrace()
             return false
@@ -95,13 +95,12 @@ class CustomRulesBackuper {
             val regex = jsonObject[REGEX]
             if (sms == null || code == null || regex == null) {
                 // json 对象中没有这些属性，即文件格式错误，抛出异常
-                throw IllegalStateException("There are no $SMS, $CODE, $REGEX property in json")
+                throw IllegalStateException("There are no $SMS, $CODE or $REGEX property in json")
             }
-            val e = SmsCodeRegex(
+            result.add(SmsCodeRegex(
                     sms = sms.asString,
                     verificationCode = code.asString,
-                    regex = regex.asString)
-            result.add(e)
+                    regex = regex.asString))
         }
 
         return result

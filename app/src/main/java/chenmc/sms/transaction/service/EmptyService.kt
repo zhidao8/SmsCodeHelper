@@ -15,7 +15,7 @@ class EmptyService : Service() {
     }
     
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        stopSelf()
+        stopSelf(startId)
         return Service.START_NOT_STICKY
     }
 }

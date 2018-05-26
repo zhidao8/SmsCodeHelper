@@ -51,6 +51,7 @@
     <!--取件码匹配正则-->
     <string name="pref_key_express_regexp">express_regexp</string>
     <!--<string name="pref_def_value_express_regexp" translatable="false"></string>-->
+    <string name="pref_key_express_place_regexp">express_place_regexp</string>
 
     <!--关于页面-->
     <string name="pref_key_about">about</string>

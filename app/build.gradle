@@ -41,12 +41,18 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            manifestPlaceholders = [APP_ICON: "@mipmap/ic_launcher"]
+            manifestPlaceholders = [
+                    APP_ICON: "@mipmap/ic_launcher",
+                    APP_LABEL: "@string/app_name"
+            ]
         }
         debug {
             //在编译打包时会给包名加上后缀
             applicationIdSuffix '.debug'
-            manifestPlaceholders = [APP_ICON: "@mipmap/ic_launcher_debug"]
+            manifestPlaceholders = [
+                    APP_ICON: "@mipmap/ic_launcher_debug",
+                    APP_LABEL: "SmsCodeHelper"
+            ]
         }
     }
 }

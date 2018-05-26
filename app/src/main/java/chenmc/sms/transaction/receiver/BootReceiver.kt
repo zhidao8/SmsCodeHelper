@@ -17,7 +17,7 @@ class BootReceiver : BroadcastReceiver() {
     /**
      * 开机后自动启动[SmsObserverService]
      */
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(context: Context, intent: Intent?) {
         if (AppPreference.isCompatMode) {
             // 如果短信处理方式是通过监听短信数据库变化读取短信内容，自动启动短信监视服务
             SmsObserverService.startThisService(context)

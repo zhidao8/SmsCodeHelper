@@ -9,5 +9,5 @@ import android.content.Intent
  */
 class EmptyReceiver : BroadcastReceiver() {
     
-    override fun onReceive(context: Context, intent: Intent) {}
+    override fun onReceive(context: Context, intent: Intent?) {}
 }

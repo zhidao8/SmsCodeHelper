@@ -57,6 +57,7 @@
     <string name="pref_regexp">验证码匹配规则</string>
     <string name="pref_express_sms_contains">短信包含关键词</string>
     <string name="pref_express_regexp">取件码匹配规则</string>
+    <string name="pref_express_place_regexp">取件地址匹配规则</string>
     <string name="pref_cate_code">短信验证码</string>
     <string name="pref_cate_express">快递取件码</string>
     <string name="pref_permission">权限说明</string>
@@ -98,6 +99,7 @@
     <string name="dialog_message_delete_all_checked_sms">注意：将会同时删除系统短信，此操作不可撤销</string>
     <string name="dialog_title_delete_all_checked_rules">删除当前选择的规则？</string>
     <string name="dialog_message_delete_all_checked_rules">注意：此操作不可撤销</string>
+    <string name="dialog_title_regex_incorrect">正则表达式语法错误</string>
     <string name="change_default_mms_to_default">请将默认短信应用改回默认</string>
     <string name="up_to_parent">返回上级目录</string>
     <string name="file_not_choose">文件未选择</string>

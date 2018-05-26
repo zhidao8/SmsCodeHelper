@@ -38,7 +38,7 @@ class SetReadService : Service() {
             handler.sendMessageDelayed(message, 3 * 1000)
         } else stopSelf(startId)
         
-        return super.onStartCommand(intent, flags, startId)
+        return Service.START_NOT_STICKY
     }
     
     companion object {

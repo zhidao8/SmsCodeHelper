@@ -19,12 +19,6 @@ class SmsAnalyzer(context: Context) {
 
     private val context = context.applicationContext
 
-    private companion object {
-        // 缓存
-        private var regexListCache: List<SmsCodeRegex>? = null
-        private var updateTime: Long = 0
-    }
-
     /**
      * 根据短信内容分析是否是验证码短信
      * 如果是返回 [VerificationCodeSms] ，如果不是返回 null
@@ -173,16 +167,23 @@ class SmsAnalyzer(context: Context) {
      * 如果是返回 [ExpressCodeSms] ，如果不是返回 null
      */
     fun analyseExpressSms(sms: String): ExpressCodeSms? {
-
+        // 取件码短信关键词
         val keywordList = ArrayList<String>(2)
-        val regexList = ArrayList<String>(2)
         val expressKeyword = AppPreference.expressKeyword
-        val expressRegex = AppPreference.expressRegex
-
         if (!expressKeyword.trim().isEmpty()) keywordList.add(expressKeyword)
-        if (!expressRegex.trim().isEmpty()) regexList.add(expressRegex)
         keywordList.add(AppPreference.defaultExpressKeyword)
+
+        // 取件码短信取件码匹配正则
+        val regexList = ArrayList<String>(2)
+        val expressRegex = AppPreference.expressRegex
+        if (!expressRegex.trim().isEmpty()) regexList.add(expressRegex)
         regexList.add(AppPreference.defaultExpressRegex)
+
+        // 取件码短信地址匹配正则
+        val placeRegexList = ArrayList<String>(2)
+        val expressPlaceRegex = AppPreference.expressPlaceRegex
+        if (!expressPlaceRegex.trim().isEmpty()) regexList.add(expressPlaceRegex)
+        placeRegexList.add(AppPreference.defaultExpressPlaceRegex)
 
         for (keyword in keywordList) {
             if (sms.matches("(.|\n)*($keyword)(.|\n)*".toRegex())) {
@@ -195,12 +196,14 @@ class SmsAnalyzer(context: Context) {
 
                         // 获取短信中的服务商
                         codeSms.serviceProvider = extractProvider(sms)
-                        val addressMatcher = Pattern.compile(
-                                "(?<=快递已到)\\w*(?=[,.，。])"
-                        ).matcher(sms)
-                        if (addressMatcher.find()) {
-                            // 获取短信中的地址
-                            codeSms.content = addressMatcher.group()
+
+                        for (placeRegex in placeRegexList) {
+                            val addressMatcher = Pattern.compile(placeRegex).matcher(sms)
+                            if (addressMatcher.find()) {
+                                // 获取短信中的地址
+                                codeSms.content = addressMatcher.group()
+                                break
+                            }
                         }
 
                         return codeSms
@@ -210,5 +213,11 @@ class SmsAnalyzer(context: Context) {
         }
 
         return null
+    }
+
+    private companion object {
+        // 缓存
+        private var regexListCache: List<SmsCodeRegex>? = null
+        private var updateTime: Long = 0
     }
 }

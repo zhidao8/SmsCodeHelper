@@ -1,6 +1,7 @@
 package chenmc.sms.ui.main
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.provider.Telephony
 import android.view.MenuItem
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.storage.AppPreference
+import java.util.regex.PatternSyntaxException
 
 /**
  * Created by 明明 on 2017/8/9.
@@ -51,30 +53,35 @@ class AdvancedPreferenceFragment : PreferenceFragment(), Preference.OnPreference
             this.onPreferenceChangeListener = this@AdvancedPreferenceFragment
         }
         
-        //region 短信包含关键词
-        val prefSmsContains = findPreference(getString(R.string.pref_key_sms_contains))
-        prefSmsContains.summary = AppPreference.smsKeyword
-        prefSmsContains.onPreferenceChangeListener = this
-        //endregion
+        // 短信包含关键词
+        findPreference(getString(R.string.pref_key_sms_contains)).apply {
+            this.summary = AppPreference.smsKeyword
+            this.onPreferenceChangeListener = this@AdvancedPreferenceFragment
+        }
+
+        // 验证码匹配规则
+        findPreference(getString(R.string.pref_key_regexp)).apply {
+            this.summary = AppPreference.smsRegex
+            this.onPreferenceChangeListener = this@AdvancedPreferenceFragment
+        }
         
-        //region 验证码匹配规则
-        val prefRegexp = findPreference(getString(R.string.pref_key_regexp))
-        prefRegexp.summary = AppPreference.smsRegex
-        prefRegexp.onPreferenceChangeListener = this
-        //endregion
-        
-        //region 快递短信包含关键词
-        val prefExpressSmsContains = findPreference(getString(R.string.pref_key_express_sms_contains))
-        prefExpressSmsContains.summary = AppPreference.expressKeyword
-        prefExpressSmsContains.onPreferenceChangeListener = this
-        //endregion
-        
-        //region 取件码匹配规则
-        val prefExpressRegexp = findPreference(getString(R.string.pref_key_express_regexp))
-        prefExpressRegexp.summary = AppPreference.expressRegex
-        prefExpressRegexp.onPreferenceChangeListener = this
-        //endregion
-        
+        // 快递短信包含关键词
+        findPreference(getString(R.string.pref_key_express_sms_contains)).apply {
+            this.summary = AppPreference.expressKeyword
+            this.onPreferenceChangeListener = this@AdvancedPreferenceFragment
+        }
+
+        // 取件码匹配规则
+        findPreference(getString(R.string.pref_key_express_regexp)).apply {
+            this.summary = AppPreference.expressRegex
+            this.onPreferenceChangeListener = this@AdvancedPreferenceFragment
+        }
+
+        // 取件地址匹配正则
+        findPreference(getString(R.string.pref_key_express_place_regexp)).apply {
+            this.summary = AppPreference.expressPlaceRegex
+            this.onPreferenceChangeListener = this@AdvancedPreferenceFragment
+        }
     }
     
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
@@ -101,7 +108,27 @@ class AdvancedPreferenceFragment : PreferenceFragment(), Preference.OnPreference
                 if (intent?.resolveActivity(activity.packageManager) != null)
                     startActivityForResult(intent, REQUEST_CHANGE_DEFAULT_SMS_APP)
             }
-            else -> preference.summary = newValue.toString()
+            getString(R.string.pref_key_sms_contains),
+            getString(R.string.pref_key_regexp),
+            getString(R.string.pref_key_express_sms_contains),
+            getString(R.string.pref_key_express_regexp),
+            getString(R.string.pref_key_express_place_regexp) -> {
+                try {
+                    newValue.toString().toRegex()
+                } catch (e: PatternSyntaxException) {
+                    val dialog = AlertDialog.Builder(activity)
+                        .setTitle(R.string.dialog_title_regex_incorrect)
+                        .setMessage(e.message)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .create()
+                    dialog.setCanceledOnTouchOutside(false)
+                    dialog.show()
+
+                    return false
+                }
+
+                preference.summary = newValue.toString()
+            }
         }
         
         return true
