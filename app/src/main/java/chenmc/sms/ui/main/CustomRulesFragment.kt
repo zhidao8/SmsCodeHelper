@@ -29,8 +29,6 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import chenmc.sms.code.helper.R
-import chenmc.sms.data.storage.AppDatabase
-import chenmc.sms.data.storage.AppDatabaseWrapper
 import chenmc.sms.data.storage.CustomRulesBackuper
 import chenmc.sms.data.storage.SmsCodeRegex
 import chenmc.sms.data.storage.SmsCodeRegexDao
@@ -66,8 +64,6 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
     // 正在修改中的 ListView Item 在 ListView 中的位置
     private var currentItemPosition: Int = -1
 
-    private var _database: AppDatabase? = null
-    private lateinit var database: AppDatabase
     private lateinit var smsCodeRegexDao: SmsCodeRegexDao
 
     private val listener = Listener()
@@ -109,20 +105,11 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
         listView.onItemClickListener = listener
         listView.onItemLongClickListener = listener
 
+        smsCodeRegexDao = SmsCodeRegexDao(activity)
         refreshData()
     }
 
-    private fun ensureDatabase() {
-        if (_database?.isOpen != true) {
-            database = AppDatabaseWrapper(activity).database
-            smsCodeRegexDao = database.smsCodeRegexDao()
-
-            _database = database
-        }
-    }
-
     private fun refreshData() {
-        ensureDatabase()
         ReadDataTask(adapter, smsCodeRegexDao).execute()
     }
 
@@ -139,13 +126,10 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
         if (activity is IOnBackPressedActivity) {
             (activity as IOnBackPressedActivity).setFocusFragment(this)
         }
-
-        ensureDatabase()
     }
 
     override fun onStop() {
         super.onStop()
-        database.close()
     }
 
     override fun onPermissionGranted(requestCode: Int, grantedPermissions: Array<String>) {
@@ -664,7 +648,7 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
         private val wrAdapter: WeakReference<ListViewAdapter> = WeakReference(adapter)
 
         override fun doInBackground(vararg args: Any): List<SmsCodeRegex> {
-            return dao.loadAll()
+            return dao.selectAll()
         }
 
         override fun onPostExecute(smsCodeRegexes: List<SmsCodeRegex>) {

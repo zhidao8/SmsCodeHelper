@@ -65,8 +65,7 @@ class VerificationSmsHandler : ISmsHandler {
         // 通知标题
         val title = context.getString(
                 R.string.code_is,
-                codeSms.serviceProvider,
-                codeSms.code)
+                codeSms.serviceProvider)
         
         val contentIntent = PendingIntent.getService(context, notificationId,
                 Intent(context, CopyTextService::class.java)
@@ -75,7 +74,7 @@ class VerificationSmsHandler : ISmsHandler {
     
         val builder = NotificationCompat.Builder(context, NotificationContract.CHANNEL_ID_VERIFICATION)
             .setContentTitle(title)
-            .setContentText(codeSms.content)
+            .setContentText(codeSms.code)
             .setTicker(title)
             .setContentIntent(contentIntent)
             .setDefaults(NotificationCompat.DEFAULT_SOUND)

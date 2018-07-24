@@ -40,6 +40,8 @@ class SmsObserverService : Service() {
         
         // 取消注册短信数据库监听
         contentResolver.unregisterContentObserver(smsObserver)
+
+//        Log.i(javaClass.canonicalName, "onDestroy")
     }
     
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -66,15 +68,17 @@ class SmsObserverService : Service() {
             previousId = databaseId
             // 短信执行器并执行
             smsHandlerExecutor.execute(sms)
+
+//            Log.i(javaClass.canonicalName, "$databaseId: $sms")
         }
     }
     
     companion object {
-        
+
         fun startThisService(context: Context) {
             context.startService(Intent(context, SmsObserverService::class.java))
         }
-        
+
         fun stopThisService(context: Context) {
             context.stopService(Intent(context, SmsObserverService::class.java))
         }

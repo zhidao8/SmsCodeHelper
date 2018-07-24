@@ -28,7 +28,7 @@ class CustomRulesBackuper {
     private val timeFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss.SSS", Locale.getDefault())
 
     constructor(context: Context) {
-        dao = AppDatabaseWrapper(context).database.smsCodeRegexDao()
+        dao = SmsCodeRegexDao(context)
     }
 
     constructor(dao: SmsCodeRegexDao) {
@@ -39,7 +39,7 @@ class CustomRulesBackuper {
      * 将数据库中的数据持久化到 json 文件中，文件保存到文件夹 [dir] 中
      */
     fun backup(dir: File) {
-        val list = dao.loadAll()
+        val list = dao.selectAll()
         val jsonElement = toJsonElement(list)
 
         val packageName = context.packageName

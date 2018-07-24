@@ -21,7 +21,7 @@ class PreferenceActivity : PermissionActivity(), IOnBackPressedActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             actionBar?.elevation = 0f
         }
-        
+
         fragmentManager.beginTransaction()
             .replace(R.id.fragment_container, MainPreferenceFragment())
             .commit()

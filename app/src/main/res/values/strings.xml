@@ -21,8 +21,8 @@
     <string name="notification_channel_verification_code">验证码</string>
     <string name="notification_channel_express_code">取件码</string>
 
-    <string name="code_is">%1$s验证码：%2$s</string>
-    <string name="express_is">%1$s取件码：%2$s</string>
+    <string name="code_is">%1$s验证码</string>
+    <string name="express_is">%1$s取件码</string>
     <string name="click_to_copy">点击复制</string>
 
     <!--menu-->

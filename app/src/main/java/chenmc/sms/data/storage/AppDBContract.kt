@@ -4,7 +4,7 @@ package chenmc.sms.data.storage
  * @author Carter
  * Created on 2018-02-12
  */
-object AppDatabaseContract {
+object AppDBContract {
     const val DATABASE = "MainDatabase.db"
     
     object SmsCodeRegex {
