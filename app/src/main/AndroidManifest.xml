@@ -20,11 +20,12 @@
         android:name="chenmc.sms.ui.app.App"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="${APP_ICON}"
+        android:icon="@mipmap/ic_launcher"
         android:label="${APP_LABEL}"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:label">
 
         <activity
             android:name="chenmc.sms.ui.main.PreferenceActivity"
@@ -101,7 +102,6 @@
         <service
             android:name="chenmc.sms.transaction.service.SmsNotificationListenerService"
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
             android:process=":background">
             <intent-filter>
@@ -125,6 +125,10 @@
                 <data android:scheme="mmsto" />
             </intent-filter>
         </service>
+
+        <service
+            android:name="chenmc.sms.transaction.service.CancelNotificationService"
+            android:exported="false" />
 
         <!-- This Receiver is a necessary receiver as a default MMS -->
         <receiver

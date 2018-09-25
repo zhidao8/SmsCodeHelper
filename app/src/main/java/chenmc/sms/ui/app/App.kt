@@ -26,11 +26,14 @@ class App : Application() {
         // 初始化程序崩溃时的异常处理器
         CrashHandler.init(context)
 
+        // 初始化日志打印
         LogUtil.init(this)
 
+        // 初始化 Preference
         AppPreference.init(context)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // 针对 Android O 以上设置通知通道
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
                 .createNotificationChannels(mutableListOf(
                         NotificationChannel(NotificationContract.CHANNEL_ID_VERIFICATION,

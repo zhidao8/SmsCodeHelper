@@ -67,9 +67,9 @@ object AppPreference {
 
     const val defaultExpressKeyword: String = "快递|快件|单号|订单|包裹"
 
-    const val defaultExpressRegex: String = "((?<=(取件码|密码|货码|暗号|请凭|号码)[『「【〖（(:：“\\\" ]?)(?<![a-zA-Z0-9-])[a-zA-Z0-9-]{4,10}(?![a-zA-Z0-9-]))|货号[0-9]{1,}"
+    const val defaultExpressRegex: String = "((?<=(取件码|密码|货码|暗号|凭|号码)[『「【〖（(:：“\" ]?)(?<![a-zA-Z0-9-])[a-zA-Z0-9-]{4,10}(?![a-zA-Z0-9-]))|货号[0-9]{1,}"
 
-    const val defaultExpressPlaceRegex: String = "(?<=到|至|速来|[取|提]货地址：)\\w{3,}?(?=(领取|取件|取货)|[,.)，。）])"
+    const val defaultExpressPlaceRegex: String = "(?<=(到|至|速来|地址)[：: ]?)[\\w|-]{3,}?(?=(领取|取件|取货)|[,.)，。）])"
 
     var smsKeyword: String
         get() = sp.getString(context.getString(R.string.pref_key_sms_contains), "")

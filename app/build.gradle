@@ -9,8 +9,8 @@ android {
         applicationId "chenmc.sms.code.helper"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 20180722
-        versionName "4.0"
+        versionCode 20180925
+        versionName "4.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -34,18 +34,12 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            manifestPlaceholders = [
-                    APP_ICON: "@mipmap/ic_launcher",
-                    APP_LABEL: "@string/app_name"
-            ]
+            manifestPlaceholders = [APP_LABEL: "@string/app_name"]
         }
         debug {
             //在编译打包时会给包名加上后缀
             applicationIdSuffix '.debug'
-            manifestPlaceholders = [
-                    APP_ICON: "@mipmap/ic_launcher_debug",
-                    APP_LABEL: "SmsCodeHelper"
-            ]
+            manifestPlaceholders = [APP_LABEL: "SmsCodeHelper"]
         }
     }
 }

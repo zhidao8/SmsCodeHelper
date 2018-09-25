@@ -16,7 +16,7 @@ import chenmc.sms.transaction.SmsAnalyzer
 class SmsNotificationListenerService : NotificationListenerService() {
     
     private val context: Context = this
-    
+
     // API 21 之前，父类的这个方法是 abstract 的
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         when (sbn.packageName) {
@@ -38,8 +38,15 @@ class SmsNotificationListenerService : NotificationListenerService() {
             }
         }
     }
-    
+
     // API 21 之前，父类的这个方法是 abstract 的
-    override fun onNotificationRemoved(sbn: StatusBarNotification) {
+    override fun onNotificationRemoved(sbn: StatusBarNotification) = Unit
+
+    override fun onListenerConnected() {
+        super.onListenerConnected()
+    }
+
+    override fun onListenerDisconnected() {
+        super.onListenerDisconnected()
     }
 }
