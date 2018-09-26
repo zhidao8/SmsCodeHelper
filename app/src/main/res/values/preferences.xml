@@ -34,8 +34,11 @@
     <string name="pref_key_clear_code_sms">clear_code_sms</string>
 
     <!--高级设置页面-->
+    <string name="pref_key_app_main_switch">app_main_switch</string>
+    <bool name="pref_def_value_app_main_switch">true</bool>
     <!--通知栏使用权-->
     <string name="pref_key_notification_listener">notification_listener</string>
+    <bool name="pref_def_value_notification_listener">false</bool>
     <!--默认短信应用-->
     <string name="pref_key_default_sms_app">default_sms_app</string>
     <bool name="pref_def_value_default_sms_app">false</bool>

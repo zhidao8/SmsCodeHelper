@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
+import chenmc.sms.data.storage.AppPreference
 import chenmc.sms.transaction.service.SmsReceiveService
 
 /**
@@ -13,8 +14,11 @@ import chenmc.sms.transaction.service.SmsReceiveService
  */
 
 class SmsReceiver : BroadcastReceiver() {
-    
+
     override fun onReceive(context: Context, intent: Intent?) {
+        // 用户禁用了应用所有功能，不处理任何逻辑
+        if (!AppPreference.isAppFeaturesEnabled) return
+
         when (intent?.action) {
             Telephony.Sms.Intents.SMS_RECEIVED_ACTION -> {
                 // 打开一个服务进行相关处理

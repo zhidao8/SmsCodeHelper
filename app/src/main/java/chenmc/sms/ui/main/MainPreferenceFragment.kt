@@ -97,9 +97,17 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
         SmsObserverService.stopThisService(activity)
         
         val context = activity
-        if (AppPreference.isCompatMode) {
-            // 如果短信处理方式是通过监听短信数据库变化读取短信内容（兼容模式），自动启动短信监视服务
-            SmsObserverService.startThisService(context)
+        if (AppPreference.isCompatMode && AppPreference.isAppFeaturesEnabled) {
+            /*
+             * 如果短信处理方式是通过监听短信数据库变化读取短信内容（兼容模式），并且没有禁用应用所有功能，
+             * 自动启动短信数据库监听服务
+             * Android P 以上不支持兼容模式
+             */
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1)
+                SmsObserverService.startThisService(context)
+            else {
+                Toast.makeText(activity, R.string.p_not_support_compat_mode, Toast.LENGTH_LONG).show()
+            }
         }
     }
     
@@ -112,6 +120,12 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
         }
         // Fragment 有菜单项
         setHasOptionsMenu(true)
+
+        // 关闭应用总开关后的操作
+        val isAppFeaturesEnabled = AppPreference.isAppFeaturesEnabled
+        findPreference(getString(R.string.pref_key_mode)).isEnabled = isAppFeaturesEnabled
+        findPreference(getString(R.string.pref_key_sms_handle_ways)).isEnabled = isAppFeaturesEnabled
+        findPreference(getString(R.string.pref_key_express)).isEnabled = isAppFeaturesEnabled
     }
     
     // 第一次运行应用的一些初始化操作
@@ -192,10 +206,12 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
     }
     
     private fun initPreference() {
+        val listener = this
+
         // 模式
         (findPreference(getString(R.string.pref_key_mode)) as ListPreference).apply {
             summary = entries[value.toInt()]
-            onPreferenceChangeListener = this@MainPreferenceFragment
+            onPreferenceChangeListener = listener
         }
         
         // 验证码处理方式
@@ -213,7 +229,7 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
                 summarySB.delete(summarySB.length - ENTRIES_CONNECTOR.length, summarySB.length)
             }
             this.summary = summarySB.toString()
-            this.onPreferenceChangeListener = this@MainPreferenceFragment
+            this.onPreferenceChangeListener = listener
         }
         
     }
@@ -320,12 +336,12 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
                         AlertDialog.Builder(activity)
                             .setTitle(activity.resources.getStringArray(R.array.pref_entries_mode)[1])
                             .setMessage(R.string.pref_compat_mode_desc)
-                            .setPositiveButton(R.string.ok, { _, _ ->
+                            .setPositiveButton(R.string.ok) { _, _ ->
                                 // 请求权限
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     requestPermissions(REQUEST_PERMISSIONS_READ_SMS, arrayOf(Manifest.permission.READ_SMS), this)
                                 }
-                            })
+                            }
                             .create()
                             .show()
                     }
