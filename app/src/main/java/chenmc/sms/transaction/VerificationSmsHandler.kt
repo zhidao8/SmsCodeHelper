@@ -24,19 +24,19 @@ import java.util.*
  */
 class VerificationSmsHandler : ISmsHandler {
     private lateinit var context: Context
-    
+
     override fun handle(context: Context, sms: String): Boolean {
         this.context = context.applicationContext
-        
+
         val codeSms = SmsAnalyzer(context).analyseVerificationSms(sms) ?: return false
-        
+
         handleCode(codeSms)
         return true
     }
-    
+
     // 处理验证码
     private fun handleCode(codeSms: VerificationCodeSms) {
-        
+
         var valuesSet: MutableSet<String> = HashSet(2)
         Collections.addAll(
                 valuesSet,
@@ -58,7 +58,7 @@ class VerificationSmsHandler : ISmsHandler {
             notifyNotification(codeSms)
         }
     }
-    
+
     // 在通知栏显示验证码和服务商
     private fun notifyNotification(codeSms: VerificationCodeSms) {
         val notificationId = System.currentTimeMillis().toInt()
@@ -66,12 +66,12 @@ class VerificationSmsHandler : ISmsHandler {
         val title = context.getString(
                 R.string.code_is,
                 codeSms.serviceProvider)
-        
+
         val contentIntent = PendingIntent.getService(context, notificationId,
                 Intent(context, CopyTextService::class.java)
                     .putExtra(CopyTextService.EXTRA_VERIFICATION, codeSms.code),
                 PendingIntent.FLAG_UPDATE_CURRENT)
-    
+
         val builder = NotificationCompat.Builder(context, NotificationContract.CHANNEL_ID_VERIFICATION)
             .setContentTitle(title)
             .setContentText(codeSms.code)
@@ -84,14 +84,14 @@ class VerificationSmsHandler : ISmsHandler {
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-    
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setSmallIcon(R.drawable.ic_notification)
                 .color = ContextCompat.getColor(context, R.color.colorPrimary)
         } else {
             builder.setSmallIcon(R.mipmap.ic_launcher)
         }
-    
+
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, builder.build())
     }

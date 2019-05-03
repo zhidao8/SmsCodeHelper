@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
         android:defaultValue="@string/pref_def_value_mode"
         android:entries="@array/pref_entries_mode"
         android:entryValues="@array/pref_entry_values_mode"
         android:key="@string/pref_key_mode"
-        android:title="@string/pref_mode"/>
+        android:title="@string/pref_mode" />
 
     <MultiSelectListPreference
         android:entries="@array/pref_entries_sms_handle_ways"
         android:entryValues="@array/pref_entry_values_sms_handle_ways"
         android:defaultValue="@array/pref_def_values_sms_handle_ways"
         android:key="@string/pref_key_sms_handle_ways"
-        android:title="@string/pref_sms_handle_ways"/>
+        android:title="@string/pref_sms_handle_ways" />
 
     <CheckBoxPreference
         android:defaultValue="@bool/pref_def_value_express"
         android:key="@string/pref_key_express"
         android:summary="@string/pref_express_summary"
-        android:title="@string/pref_express"/>
+        android:title="@string/pref_express" />
 
-    <chenmc.sms.ui.preference.TestPreference
+    <EditTextPreference
         android:key="@string/pref_key_test_rules"
         android:summary="@string/pref_test_rules_summary"
-        android:title="@string/pref_test_rules"/>
+        android:title="@string/pref_test_rules" />
 
     <Preference
         android:key="@string/pref_key_custom_rules"
         android:summary="@string/pref_custom_rules_summary"
-        android:title="@string/pref_custom_rules"/>
+        android:title="@string/pref_custom_rules" />
 
     <Preference
         android:key="@string/pref_key_clear_code_sms"
-        android:title="@string/pref_clear_code_sms"/>
+        android:title="@string/pref_clear_code_sms" />
 </PreferenceScreen>

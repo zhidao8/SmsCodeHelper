@@ -9,25 +9,12 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.ActionMode
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.BaseAdapter
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.storage.CustomRulesBackuper
 import chenmc.sms.data.storage.SmsCodeRegex
@@ -89,7 +76,7 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
         tvTips.visibility = View.GONE
 
         // 初始化悬浮按钮
-        fab = root.findViewById(R.id.fab)
+        fab = root.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener(listener)
 
         etSms.onFocusChangeListener = listener
@@ -126,10 +113,6 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
         if (activity is IOnBackPressedActivity) {
             (activity as IOnBackPressedActivity).setFocusFragment(this)
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
     }
 
     override fun onPermissionGranted(requestCode: Int, grantedPermissions: Array<String>) {
@@ -310,7 +293,7 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
 
     private fun updateActionModeTitle() {
         listener.actionMode?.title = adapter.itemCheckedCount.toString() +
-                "/" + adapter.count
+                                     "/" + adapter.count
     }
 
     override fun onBackPressed(): Boolean {
@@ -345,7 +328,7 @@ class CustomRulesFragment : PermissionFragment(), IOnRequestPermissionsResult, I
                     showAddRuleLayout()
                     activity.invalidateOptionsMenu()
                 }
-            // 点击编辑界面背景时模拟返回按钮点击事件
+                // 点击编辑界面背景时模拟返回按钮点击事件
                 R.id.add_rule_layout_bg -> onBackPressed()
             }
         }

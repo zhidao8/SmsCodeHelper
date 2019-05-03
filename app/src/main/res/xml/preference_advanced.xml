@@ -9,7 +9,7 @@
             android:title="@string/pref_app_main_switch" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_advanced">
+    <PreferenceCategory android:title="@string/pref_experiment">
         <SwitchPreference
             android:defaultValue="@bool/pref_def_value_notification_listener"
             android:key="@string/pref_key_notification_listener"

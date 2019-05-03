@@ -6,12 +6,12 @@ package chenmc.sms.data
  */
 
 class VerificationCodeSms : CodeSms {
-    
+
     constructor()
-    
+
     constructor(code: String) : super(code)
-    
+
     constructor(serviceProvider: String, verificationCode: String) : super(serviceProvider, verificationCode)
-    
+
     constructor(serviceProvider: String, code: String, content: String) : super(serviceProvider, code, content)
 }

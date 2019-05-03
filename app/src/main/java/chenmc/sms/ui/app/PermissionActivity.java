@@ -24,16 +24,16 @@ import chenmc.sms.util.TransparentBarUtils;
  */
 
 public abstract class PermissionActivity extends Activity {
-    
+
     private SparseArray<IOnRequestPermissionsResult> mListeners = new SparseArray<>(2);
-    
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewRes());
         init();
     }
-    
+
     private void init() {
         //region 沉浸式状态栏
         TransparentBarUtils barUtils = new TransparentBarUtils(this);
@@ -41,20 +41,20 @@ public abstract class PermissionActivity extends Activity {
         barUtils.commit();
         //endregion
     }
-    
+
     protected abstract int getContentViewRes();
-    
+
     @SuppressLint("NewApi")
     public void requestPermissions(int requestCode, String[] permissions,
-        IOnRequestPermissionsResult listener) {
-    
+                                   IOnRequestPermissionsResult listener) {
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (listener != null) {
                 listener.onPermissionGranted(requestCode, permissions);
             }
             return;
         }
-        
+
         // 标记系统是否授予所有的权限
         boolean grantedAll = true;
         for (String permission : permissions) {
@@ -65,7 +65,7 @@ public abstract class PermissionActivity extends Activity {
                 break;
             }
         }
-    
+
         if (grantedAll) {
             if (listener != null) {
                 listener.onPermissionGranted(requestCode, permissions);
@@ -76,12 +76,12 @@ public abstract class PermissionActivity extends Activity {
             requestPermissions(permissions, requestCode);
         }
     }
-    
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-        @NonNull int[] grantResults) {
-    
+                                           @NonNull int[] grantResults) {
+
         IOnRequestPermissionsResult listener = mListeners.get(requestCode);
         if (listener != null) {
             // 使用线性表将系统允许的权限和不被系统允许的权限分别保存起来
@@ -96,29 +96,29 @@ public abstract class PermissionActivity extends Activity {
                     alwaysList.add(!shouldShowRequestPermissionRationale(permissions[0]));
                 }
             }
-    
+
             if (grantedList.size() > 0) {
                 listener.onPermissionGranted(requestCode, grantedList.toArray(new String[grantedList.size()]));
             }
-            
+
             if (deniedList.size() > 0) {
                 boolean[] bAlways = new boolean[alwaysList.size()];
                 for (int i = 0; i < alwaysList.size(); i++) {
                     bAlways[i] = alwaysList.get(i);
                 }
                 listener.onPermissionDenied(requestCode,
-                    deniedList.toArray(new String[deniedList.size()]), bAlways);
+                        deniedList.toArray(new String[deniedList.size()]), bAlways);
             }
         }
         mListeners.remove(requestCode);
-    
+
     }
-    
+
     protected void showApplicationDetail(int requestCode) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
         intent.setData(uri);
         startActivityForResult(intent, requestCode);
     }
-    
+
 }

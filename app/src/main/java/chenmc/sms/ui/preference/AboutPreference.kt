@@ -40,9 +40,9 @@ class AboutPreference : Preference {
 
     override fun onSetInitialValue(restorePersistedValue: Boolean, defaultValue: Any?) {
         isDeveloperMode =
-                if (restorePersistedValue || defaultValue == null)
-                    getPersistedBoolean(false)
-                else defaultValue as Boolean
+            if (restorePersistedValue || defaultValue == null)
+                getPersistedBoolean(false)
+            else defaultValue as Boolean
     }
 
     override fun onClick() {

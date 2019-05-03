@@ -113,7 +113,7 @@ class AdvancedPreferenceFragment : PreferenceFragment(), Preference.OnPreference
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
 
-        when (preference.key) {
+        return when (preference.key) {
             getString(R.string.pref_key_app_main_switch) -> {
                 findPreference(getString(R.string.pref_key_notification_listener)).isEnabled = (newValue as Boolean)
 
@@ -124,6 +124,7 @@ class AdvancedPreferenceFragment : PreferenceFragment(), Preference.OnPreference
                 } else {
                     cancelToast()
                 }
+                true
             }
             getString(R.string.pref_key_default_sms_app) -> {
                 val newPackage: String = if (newValue as Boolean) {
@@ -143,14 +144,17 @@ class AdvancedPreferenceFragment : PreferenceFragment(), Preference.OnPreference
                 } else {
                     null
                 }
-                if (intent?.resolveActivity(activity.packageManager) != null)
+                if (intent?.resolveActivity(activity.packageManager) != null) {
                     startActivityForResult(intent, REQUEST_CHANGE_DEFAULT_SMS_APP)
+                }
+                true
             }
             getString(R.string.pref_key_sms_contains),
             getString(R.string.pref_key_regexp),
             getString(R.string.pref_key_express_sms_contains),
             getString(R.string.pref_key_express_regexp),
             getString(R.string.pref_key_express_place_regexp) -> {
+                var isValueValid = true
                 try {
                     newValue.toString().toRegex()
                 } catch (e: PatternSyntaxException) {
@@ -162,14 +166,14 @@ class AdvancedPreferenceFragment : PreferenceFragment(), Preference.OnPreference
                     dialog.setCanceledOnTouchOutside(false)
                     dialog.show()
 
-                    return false
+                    isValueValid = false
                 }
-
                 preference.summary = newValue.toString()
-            }
-        }
 
-        return true
+                isValueValid
+            }
+            else -> false
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -8,11 +8,7 @@ import android.app.Fragment
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
+import android.os.*
 import android.preference.ListPreference
 import android.preference.MultiSelectListPreference
 import android.preference.Preference
@@ -29,6 +25,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.storage.AppPreference
+import chenmc.sms.transaction.SmsAnalyzer
+import chenmc.sms.transaction.SmsHandlerExecutor
 import chenmc.sms.transaction.service.SmsObserverService
 import chenmc.sms.ui.app.PermissionPreferenceFragment
 import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult
@@ -39,11 +37,11 @@ import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult
 
 class MainPreferenceFragment : PermissionPreferenceFragment(),
         Preference.OnPreferenceChangeListener, IOnRequestPermissionsResult {
-    
+
     private val mHandler = object : Handler(Looper.myLooper()) {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            
+
             when (msg.what) {
                 WHAT_SHOW_APP_DETAIL -> {
                     Toast.makeText(activity,
@@ -59,25 +57,25 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             }
         }
     }
-    
+
     // 判断当前应用是不是短信默认应用
     private val isSmsDefaultApp: Boolean
         get() {
             return Settings.Secure.getString(
                     activity.contentResolver, "sms_default_application") == activity.packageName
         }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preference_main)
         init()
     }
-    
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_main, menu)
     }
-    
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_permission_explanation -> {
@@ -91,11 +89,11 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
         }
         return super.onOptionsItemSelected(item)
     }
-    
+
     override fun onPause() {
         super.onPause()
         SmsObserverService.stopThisService(activity)
-        
+
         val context = activity
         if (AppPreference.isCompatMode && AppPreference.isAppFeaturesEnabled) {
             /*
@@ -110,7 +108,7 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             }
         }
     }
-    
+
     override fun onStart() {
         super.onStart()
         val actionBar = activity.actionBar
@@ -127,7 +125,7 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
         findPreference(getString(R.string.pref_key_sms_handle_ways)).isEnabled = isAppFeaturesEnabled
         findPreference(getString(R.string.pref_key_express)).isEnabled = isAppFeaturesEnabled
     }
-    
+
     // 第一次运行应用的一些初始化操作
     private fun showPermissionFirstRun() {
         if (AppPreference.isFirstRun) {
@@ -139,12 +137,12 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             mHandler.sendEmptyMessage(WHAT_REQUEST_PERMISSION)
         }
     }
-    
+
     // 显示权限说明
     @SuppressLint("InflateParams")
     private fun showPermissionExplanation() {
         // 第一次运行显示应用的权限说明
-        val dialogView = activity.layoutInflater.inflate(R.layout.dialog_permission, null)
+        val dialogView = activity.layoutInflater.inflate(R.layout.dialog_webview, null)
         val webView = dialogView.findViewById<View>(R.id.dialog_webView) as WebView
         // 设置 WebView 背景透明
         webView.setBackgroundColor(0)
@@ -154,7 +152,7 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             webView.layoutParams = layoutParams
         }
         webView.loadUrl("file:///android_asset/permission.html")
-        
+
         AlertDialog.Builder(activity)
             .setView(dialogView)
             .setTitle(getString(R.string.pref_permission))
@@ -167,11 +165,11 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             .create()
             .show()
     }
-    
+
     override fun onPermissionGranted(requestCode: Int, grantedPermissions: Array<String>) {
         // 权限被允许，不做任何操作
     }
-    
+
     override fun onPermissionDenied(requestCode: Int, deniedPermissions: Array<String>,
                                     deniedAlways: BooleanArray) {
         when (requestCode) {
@@ -197,14 +195,14 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             }
         }
     }
-    
+
     private fun init() {
         // 显示权限说明
         showPermissionFirstRun()
         // 初始化 Preference
         initPreference()
     }
-    
+
     private fun initPreference() {
         val listener = this
 
@@ -213,7 +211,7 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             summary = entries[value.toInt()]
             onPreferenceChangeListener = listener
         }
-        
+
         // 验证码处理方式
         (findPreference(getString(R.string.pref_key_sms_handle_ways)) as MultiSelectListPreference).apply {
             // 这里要重新创建一个对象而不能简单地引用，否则在后面给 MultiSelectListPreference
@@ -231,14 +229,17 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             this.summary = summarySB.toString()
             this.onPreferenceChangeListener = listener
         }
-        
+
+        findPreference(getString(R.string.pref_key_test_rules)).apply {
+            onPreferenceChangeListener = listener
+        }
     }
-    
+
     override fun onResume() {
         super.onResume()
         val isDeveloperMode = AppPreference.isDeveloperMode
         var prefDeveloper: Preference? = findPreference(getString(R.string.pref_key_developer_mode))
-        
+
         if (prefDeveloper == null && isDeveloperMode) {
             prefDeveloper = Preference(activity).apply {
                 this.key = this.context.getString(R.string.pref_key_developer_mode)
@@ -253,7 +254,7 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             preferenceScreen.removePreference(prefDeveloper)
         }
     }
-    
+
     override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen,
                                        preference: Preference): Boolean {
         when (preference.key) {
@@ -271,11 +272,11 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
                 // 清除所有验证码短信
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !isSmsDefaultApp) {
                     // 如果安卓版本大于等于 4.4，并且当前应用不是默认启动应用
-                    
+
                     // 先将当前默认启动应用保存起来
                     AppPreference.defaultSmsApp = Settings.Secure.getString(
                             activity.contentResolver, "sms_default_application") ?: ""
-                    
+
                     // Android 4.4 及以上的版本中，需要设置默认短信应用才能删除短信
                     val confirmListener = DialogInterface.OnClickListener { _, which ->
                         // 请求更改默认短信应用
@@ -289,13 +290,13 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
                         if (intent?.resolveActivity(activity.packageManager) != null)
                             startActivityForResult(intent,
                                     REQUEST_CHANGE_DEFAULT_SMS_APP)
-                        
+
                         // 如果用户指定了不再提示，记住选择
                         if (which == DialogInterface.BUTTON_NEUTRAL) {
                             AppPreference.isFirstUseClearSms = false
                         }
                     }
-                    
+
                     // 如果用户没有指定不再提示，显示对话框提示用户
                     if (AppPreference.isFirstUseClearSms) {
                         AlertDialog.Builder(activity)
@@ -316,13 +317,13 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
                 return true
             }
         }
-        
+
         return super.onPreferenceTreeClick(preferenceScreen, preference)
     }
-    
+
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-        
-        when (preference.key) {
+
+        return when (preference.key) {
             getString(R.string.pref_key_mode) -> {
                 val prefMode = preference as ListPreference
                 val possibleValues = activity.resources.getStringArray(R.array.pref_entry_values_mode)
@@ -347,7 +348,7 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
                     }
                 }
                 prefMode.summary = prefMode.entries[newValue.toInt()]
-                return true
+                true
             }
             getString(R.string.pref_key_sms_handle_ways) -> {
                 @Suppress("UNCHECKED_CAST")
@@ -369,13 +370,32 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
                     // 用户没有选择任何选项，不显示设置项的 summary
                     preference.summary = null
                 }
-                return true
+                true
             }
+            getString(R.string.pref_key_test_rules) -> {
+                activity?.let { context ->
+                    val sms = newValue.toString()
+
+                    // 创建一个短信执行器
+                    val executor = SmsHandlerExecutor(context)
+
+                    // 分析文本内容是否符合验证码短信或取件码短信的格式
+                    val smsAnalyzer = SmsAnalyzer(context)
+                    val verificationCodeSms = smsAnalyzer.analyseVerificationSms(sms)
+                    val expressCodeSms = smsAnalyzer.analyseExpressSms(sms)
+
+                    if (verificationCodeSms != null || AppPreference.expressEnable && expressCodeSms != null) {
+                        executor.execute(sms)
+                    } else {
+                        Toast.makeText(context, R.string.can_not_analyse_sms, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                true
+            }
+            else -> false
         }
-        
-        return false
     }
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_PERMISSIONS_RECEIVE_SMS -> if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
@@ -390,10 +410,10 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
                 replaceFragment(CodeSmsClearFragment())
             }
         }
-        
+
         super.onActivityResult(requestCode, resultCode, data)
     }
-    
+
     private fun replaceFragment(fragment: Fragment) {
         fragmentManager.beginTransaction()
             .setCustomAnimations(R.animator.fragment_enter, R.animator.fragment_exit,
@@ -402,23 +422,22 @@ class MainPreferenceFragment : PermissionPreferenceFragment(),
             .addToBackStack(null)
             .commit()
     }
-    
+
     companion object {
         // 请求获取接收短信权限的请求码
         private const val REQUEST_PERMISSIONS_RECEIVE_SMS = 0
-        
+
         // 请求获取查看短信权限的请求码
         private const val REQUEST_PERMISSIONS_READ_SMS = 1
-        
+
         // 请求更改默认短信的请求码
         private const val REQUEST_CHANGE_DEFAULT_SMS_APP = 2
-        
+
         private const val ENTRIES_CONNECTOR = " + "
-        
+
         // Handler Message what
         private const val SHOW_APP_DETAIL_DELAY = 3000
         private const val WHAT_SHOW_APP_DETAIL = 0
         private const val WHAT_REQUEST_PERMISSION = 1
     }
-    
 }

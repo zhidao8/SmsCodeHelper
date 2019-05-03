@@ -6,14 +6,14 @@ package chenmc.sms.ui.interfaces
  */
 
 interface IOnRequestPermissionsResult {
-    
+
     /**
      * 请求权限被允许时回调的方法
      * @param requestCode 请求码
      * @param grantedPermissions 被允许的权限；grantedPermissions != null && grantedPermissions.length > 0
      */
     fun onPermissionGranted(requestCode: Int, grantedPermissions: Array<String>)
-    
+
     /**
      * 请求权限被允许时回调的方法
      * @param requestCode 请求码

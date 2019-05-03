@@ -6,6 +6,6 @@ package chenmc.sms.ui.interfaces
  */
 
 interface IOnBackPressedFragment {
-    
+
     fun onBackPressed(): Boolean
 }

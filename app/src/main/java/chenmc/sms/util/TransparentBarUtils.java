@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 
 /**
  * @author 明 明
- *         Created on 2017-1-26.
+ * Created on 2017-1-26.
  */
 
 public class TransparentBarUtils {
@@ -90,7 +90,7 @@ public class TransparentBarUtils {
 
                     //region 原来的最底层的 View
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, 0, 2
+                            ViewGroup.LayoutParams.MATCH_PARENT, 0, 2
                     );
                     rootView.setLayoutParams(lp);
                     //endregion
@@ -98,8 +98,8 @@ public class TransparentBarUtils {
                     //region 新建的作为最底层的 View
                     LinearLayout baseView = new LinearLayout(mActivity);
                     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
                     );
                     baseView.setLayoutParams(params);
                     baseView.setOrientation(LinearLayout.VERTICAL);
@@ -126,10 +126,10 @@ public class TransparentBarUtils {
                 int statusBarHeight = isFullScreen(mActivity) ? 0 : getStatusBarHeight(mActivity);
                 ActionBar actionBar = mActivity.getActionBar();
                 int actionBarHeight = actionBar == null || !actionBar.isShowing() ?
-                    0 : getActionBarHeight(mActivity);
+                        0 : getActionBarHeight(mActivity);
                 LinearLayout.LayoutParams statusBarParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    statusBarHeight + actionBarHeight
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        statusBarHeight + actionBarHeight
                 );
                 mStatusBar.setLayoutParams(statusBarParams);
                 if (mStatusBarColor == -1)
@@ -140,8 +140,8 @@ public class TransparentBarUtils {
 
                 //region NavigationBar
                 LinearLayout.LayoutParams navigationBarParams = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    hasSoftKeys(mActivity) ? getNavigationBarHeight(mActivity) : 0
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        hasSoftKeys(mActivity) ? getNavigationBarHeight(mActivity) : 0
                 );
                 mNavigationBar.setLayoutParams(navigationBarParams);
                 if (mNavigationBarColor == -1)
@@ -163,11 +163,11 @@ public class TransparentBarUtils {
                 // 下面的代码是直接从网上复制的
                 Window window = mActivity.getWindow();
                 window.clearFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
                         WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
                 );
                 window.getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                         View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 );
@@ -264,7 +264,7 @@ public class TransparentBarUtils {
     public static int getStatusBarHeight(Context context) {
         Resources res = context.getResources();
         int resourceId = res.getIdentifier("status_bar_height",
-            "dimen", "android");
+                "dimen", "android");
         if (resourceId != 0)
             return res.getDimensionPixelSize(resourceId);
         else
@@ -280,7 +280,7 @@ public class TransparentBarUtils {
     public static int getNavigationBarHeight(Context context) {
         Resources res = context.getResources();
         int resourceId = res.getIdentifier("navigation_bar_height",
-            "dimen", "android");
+                "dimen", "android");
         if (resourceId != 0)
             return res.getDimensionPixelSize(resourceId);
         else
@@ -323,12 +323,13 @@ public class TransparentBarUtils {
 
     /**
      * 判断屏幕是否全屏
+     *
      * @param activity 当前的 Activity
      * @return boolean 类型
      */
     public static boolean isFullScreen(Activity activity) {
         return (activity.getWindow().getAttributes().flags
-            & WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            == WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                & WindowManager.LayoutParams.FLAG_FULLSCREEN)
+               == WindowManager.LayoutParams.FLAG_FULLSCREEN;
     }
 }

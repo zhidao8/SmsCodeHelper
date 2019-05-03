@@ -13,9 +13,9 @@ import chenmc.sms.ui.interfaces.IOnBackPressedFragment
  */
 
 class PreferenceActivity : PermissionActivity(), IOnBackPressedActivity {
-    
+
     private var mOnBackPressedFragment: IOnBackPressedFragment? = null
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -26,15 +26,15 @@ class PreferenceActivity : PermissionActivity(), IOnBackPressedActivity {
             .replace(R.id.fragment_container, MainPreferenceFragment())
             .commit()
     }
-    
+
     override fun getContentViewRes(): Int {
         return R.layout.activity_preference
     }
-    
+
     override fun setFocusFragment(fragment: IOnBackPressedFragment) {
         mOnBackPressedFragment = fragment
     }
-    
+
     override fun onBackPressed() {
         if (mOnBackPressedFragment?.onBackPressed() != true) {
             super.onBackPressed()

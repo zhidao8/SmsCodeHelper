@@ -15,22 +15,22 @@ import chenmc.sms.ui.app.App;
  */
 
 public class ToastUtil {
-    
+
     private static final String KEY_TEXT = "text";
     private static final String KEY_DURATION = "duration";
-    
+
     private static Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             Bundle data = msg.getData();
-            
+
             Toast.makeText(App.Companion.getContext(), data.getString(KEY_TEXT),
-                data.getInt(KEY_DURATION) ==
-                Toast.LENGTH_SHORT ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG
+                    data.getInt(KEY_DURATION) ==
+                    Toast.LENGTH_SHORT ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG
             ).show();
         }
     };
-    
+
     public static void showToast(String text, int duration) {
         Message message = mHandler.obtainMessage();
         Bundle bundle = new Bundle();
@@ -39,9 +39,9 @@ public class ToastUtil {
         message.setData(bundle);
         message.sendToTarget();
     }
-    
+
     public static void showToast(@StringRes int textRes, int duration) {
         showToast(App.Companion.getContext().getString(textRes), duration);
     }
-    
+
 }

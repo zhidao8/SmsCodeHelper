@@ -6,7 +6,7 @@ package chenmc.sms.data
  */
 
 class ExpressCodeSms : CodeSms {
-    
+
     constructor()
 
     constructor(code: String) : super(code)

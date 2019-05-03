@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/list_view"
+    <include
+        layout="@layout/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
     <View
         android:id="@+id/view_sms_layout_bg"
@@ -41,6 +41,6 @@
             android:layout_height="wrap_content"
             android:text="@string/sms_content"
             android:textColor="@color/colorTextDark"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
     </LinearLayout>
 </FrameLayout>

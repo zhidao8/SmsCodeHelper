@@ -29,11 +29,10 @@
 
         <activity
             android:name="chenmc.sms.ui.main.PreferenceActivity"
-            android:excludeFromRecents="true"
+            android:autoRemoveFromRecents="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <!-- This intent filter is necessary as a default MMS -->

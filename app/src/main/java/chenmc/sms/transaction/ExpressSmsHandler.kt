@@ -70,7 +70,7 @@ class ExpressSmsHandler : ISmsHandler {
             .setShowWhen(true) // 显示通知出现时间
             .setAutoCancel(true) // 用户点击通知后自动取消通知，实测无效
             .setContentIntent(PendingIntent.getService(context, requestCode, Intent(),
-                            PendingIntent.FLAG_CANCEL_CURRENT)) // 用户点击通知后自动取消通知
+                    PendingIntent.FLAG_CANCEL_CURRENT)) // 用户点击通知后自动取消通知
             .addAction(0, context.getString(R.string.copy_content), copyContentActionPi)
             .addAction(0, context.getString(R.string.copy_express_code), copyCodeActionPi)
 
