@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/pref_app_switch">
+    <PreferenceCategory android:title="@string/pref_title_app_switch">
         <SwitchPreference
             android:defaultValue="@bool/pref_def_value_app_main_switch"
             android:key="@string/pref_key_app_main_switch"
             android:summary="@string/pref_app_main_switch_summary"
-            android:title="@string/pref_app_main_switch" />
+            android:title="@string/pref_title_main_switch" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_advanced">
+    <PreferenceCategory android:title="@string/pref_title_experiment">
         <SwitchPreference
             android:defaultValue="@bool/pref_def_value_notification_listener"
             android:key="@string/pref_key_notification_listener"

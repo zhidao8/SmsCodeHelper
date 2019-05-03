@@ -34,13 +34,13 @@ class CopyTextService : Service() {
             clipboardManager.primaryClip = ClipData.newPlainText(javaClass.simpleName, text)
     
             when {
-                intent.hasExtra(EXTRA_VERIFICATION) -> ToastUtil.showToast(
+                intent.hasExtra(EXTRA_VERIFICATION) -> ToastUtil.showSingletonToast(
                         getString(R.string.sms_code_have_been_copied, text),
                         Toast.LENGTH_LONG)
-                intent.hasExtra(EXTRA_EXPRESS) -> ToastUtil.showToast(
+                intent.hasExtra(EXTRA_EXPRESS) -> ToastUtil.showSingletonToast(
                         getString(R.string.express_code_have_been_copied, text),
                         Toast.LENGTH_LONG)
-                intent.hasExtra(EXTRA_TEXT) -> ToastUtil.showToast(
+                intent.hasExtra(EXTRA_TEXT) -> ToastUtil.showSingletonToast(
                         getString(R.string.text_have_been_copied, text),
                         Toast.LENGTH_LONG)
             }

@@ -6,10 +6,9 @@ import android.content.res.TypedArray
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.preference.Preference
 import android.util.AttributeSet
 import android.widget.Toast
-
+import androidx.preference.Preference
 import chenmc.sms.code.helper.R
 
 /**

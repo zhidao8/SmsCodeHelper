@@ -2,7 +2,7 @@
 <resources>
     <!--主页面-->
     <!--模式-->
-    <string name="pref_key_mode">mode</string>
+    <string name="pref_key_mode" translatable="false">mode</string>
     <string-array name="pref_entries_mode">
         <item>默认模式</item>
         <item>兼容模式</item>
@@ -11,9 +11,9 @@
         <item>0</item>
         <item>1</item>
     </string-array>
-    <string name="pref_def_value_mode">0</string>
+    <string name="pref_def_value_mode" translatable="false">0</string>
     <!--验证码处理方式-->
-    <string name="pref_key_sms_handle_ways">sms_handle_ways</string>
+    <string name="pref_key_sms_handle_ways" translatable="false">sms_handle_ways</string>
     <string-array name="pref_entries_sms_handle_ways">
         <item>自动复制</item>
         <item>通知栏显示</item>
@@ -26,47 +26,51 @@
         <item>0</item>
     </string-array>
     <!--是否处理取件码-->
-    <string name="pref_key_express">express</string>
+    <string name="pref_key_express" translatable="false">express</string>
     <bool name="pref_def_value_express">false</bool>
 
-    <string name="pref_key_test_rules">test_rules</string>
-    <string name="pref_key_custom_rules">custom_rules</string>
-    <string name="pref_key_clear_code_sms">clear_code_sms</string>
+    <string name="pref_key_test_rules" translatable="false">test_rules</string>
+    <string name="pref_key_custom_rules" translatable="false">custom_rules</string>
+    <string name="pref_key_clear_code_sms" translatable="false">clear_code_sms</string>
 
     <!--高级设置页面-->
-    <string name="pref_key_app_main_switch">app_main_switch</string>
+    <string name="pref_key_app_main_switch" translatable="false">app_main_switch</string>
     <bool name="pref_def_value_app_main_switch">true</bool>
     <!--通知栏使用权-->
-    <string name="pref_key_notification_listener">notification_listener</string>
+    <string name="pref_key_notification_listener" translatable="false">notification_listener</string>
     <bool name="pref_def_value_notification_listener">false</bool>
     <!--默认短信应用-->
-    <string name="pref_key_default_sms_app">default_sms_app</string>
+    <string name="pref_key_default_sms_app" translatable="false">default_sms_app</string>
     <bool name="pref_def_value_default_sms_app">false</bool>
     <!--验证码短信关键词-->
-    <string name="pref_key_sms_contains">sms_contains</string>
+    <string name="pref_key_sms_contains" translatable="false">sms_contains</string>
     <!--<string name="pref_def_value_sms_contains" translatable="false"></string>-->
     <!--验证码匹配正则-->
-    <string name="pref_key_regexp">regexp</string>
+    <string name="pref_key_regexp" translatable="false">regexp</string>
     <!--<string name="pref_def_value_regexp" translatable="false"></string>-->
     <!--取件码短信关键词-->
-    <string name="pref_key_express_sms_contains">express_sms_contains</string>
+    <string name="pref_key_express_sms_contains" translatable="false">express_sms_contains</string>
     <!--<string name="pref_def_value_express_sms_contains" translatable="false"></string>-->
     <!--取件码匹配正则-->
-    <string name="pref_key_express_regexp">express_regexp</string>
+    <string name="pref_key_express_regexp" translatable="false">express_regexp</string>
     <!--<string name="pref_def_value_express_regexp" translatable="false"></string>-->
-    <string name="pref_key_express_place_regexp">express_place_regexp</string>
+    <string name="pref_key_express_place_regexp" translatable="false">express_place_regexp</string>
 
     <!--关于页面-->
-    <string name="pref_key_about">about</string>
-    <string name="pref_key_source_address">source_address</string>
+    <string name="pref_key_about" translatable="false">about</string>
+    <string name="pref_key_source_address" translatable="false">source_address</string>
 
     <!--自定义-->
-    <string name="pref_key_first_launch">first_launch</string>
-    <string name="pref_key_developer_mode">developer_mode</string>
-    <string name="pref_key_first_use_clear_code_sms">first_use_clear_code_sms</string>
-    <string name="pref_key_def_sms_app">sms_default_application</string>
-    <string name="pref_key_value_def_sms_app">com.android.mms</string>
+    <string name="pref_key_first_launch" translatable="false">first_launch</string>
+    <string name="pref_key_developer_mode" translatable="false">developer_mode</string>
+    <string name="pref_key_first_use_clear_code_sms" translatable="false">first_use_clear_code_sms</string>
+    <string name="pref_key_def_sms_app" translatable="false">sms_default_application</string>
+    <string name="pref_key_value_def_sms_app" translatable="false">com.android.mms</string>
 
     <bool name="pref_def_value_permission">true</bool>
     <bool name="pref_def_value_about">false</bool>
+
+    <string name="pref_key_author" translatable="false">about_author</string>
+    <string name="pref_key_store" translatable="false">about_store</string>
+    <string name="pref_key_alipay" translatable="false">donate_alipay</string>
 </resources>

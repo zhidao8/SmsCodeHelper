@@ -20,7 +20,9 @@ class SmsNotificationListenerService : NotificationListenerService() {
     // API 21 之前，父类的这个方法是 abstract 的
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         when (sbn.packageName) {
-            "com.android.mms", "com.google.android.apps.messaging" -> {
+            "com.android.mms",
+            "com.google.android.apps.messaging",
+            "com.samsung.android.messaging" -> {
                 val extras = sbn.notification.extras
 
                 val smsAnalyzer = SmsAnalyzer(context)

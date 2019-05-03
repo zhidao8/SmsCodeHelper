@@ -52,11 +52,12 @@
     <string name="pref_test_rules_summary">测试能否复制短信中的验证码</string>
     <string name="pref_custom_rules">自定义规则</string>
     <string name="pref_custom_rules_summary">自定义短信验证码匹配规则</string>
-    <string name="pref_app_switch">应用开关</string>
-    <string name="pref_app_main_switch">应用总开关</string>
+    <string name="pref_title_app_switch">应用开关</string>
+    <string name="pref_title_main_switch">应用总开关</string>
     <string name="off_notification_listener_manually">请手动关闭通知栏使用权</string>
     <string name="pref_app_main_switch_summary">关闭后将禁用应用的所有功能</string>
     <string name="pref_advanced">高级设置</string>
+    <string name="pref_title_experiment">实验性功能</string>
     <string name="pref_sms_contains">短信包含关键词</string>
     <string name="pref_regexp">验证码匹配规则</string>
     <string name="pref_express_sms_contains">短信包含关键词</string>
@@ -111,12 +112,19 @@
     <string name="pref_compat_mode_desc">
     兼容模式需要常驻后台。\n如果在使用过程中发现验证码复制了两次，说明您的手机不需要开启兼容模式。\n不支持 Android P 以上。
     </string>
-    <string name="p_not_support_compat_mode">兼容模式不支持 Android P 以上</string>
+    <string name="p_not_support_compat_mode">Android P 以上设备不支持兼容模式</string>
     <string name="set_read_fail">标记短信已读操作失败</string>
-    <string name="category_open_source_address">开源地址</string>
+    <string name="pref_title_author">作者</string>
+    <string name="pref_title_to_store">应用市场</string>
+    <string name="pref_title_rate_this_app">给应用评分</string>
+    <string name="pref_title_github">GitHub</string>
+    <string name="pref_title_donate">捐赠</string>
+    <string name="pref_title_alipay">支付宝</string>
     <string name="category_used_library">使用到的开源库</string>
     <string name="this_function_maybe_unusable">这个功能可能并没有什么用</string>
 
     <!--无障碍服务-->
     <string name="accessibility_description">自动将验证码粘贴到输入法光标处</string>
+    <string name="dialog_title_add_custom_rule">添加规则</string>
+    <string name="dialog_title_edit_custom_rule">修改规则</string>
 </resources>

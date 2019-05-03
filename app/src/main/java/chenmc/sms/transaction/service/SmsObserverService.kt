@@ -45,7 +45,7 @@ class SmsObserverService : Service() {
     }
     
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        return Service.START_STICKY
+        return START_STICKY
     }
     
     private inner class SmsObserver internal constructor(handler: Handler) : ContentObserver(handler) {

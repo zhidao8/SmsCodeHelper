@@ -1,38 +1,17 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="@android:style/Theme.DeviceDefault.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/AppTheme.ActionBarStyle</item>
-        <item name="android:actionOverflowButtonStyle">@style/AppTheme.ActionButtonStyle</item>
-        <item name="android:actionButtonStyle">@style/AppTheme.ActionButtonStyle</item>
-
-        <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:actionModeBackground">@color/colorPrimary</item>
-        <item name="android:actionModeStyle">@style/AppTheme.ActionModeStyle</item>
-
-        <item name="android:windowContentOverlay">@null</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
     </style>
 
-    <style name="AppTheme.ActionBarStyle" parent="@android:style/Widget.DeviceDefault.Light.ActionBar.Solid">
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:titleTextStyle">@style/AppTheme.ActionBarStyle.Title</item>
-        <item name="android:displayOptions">showTitle</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
-        <item name="android:actionOverflowButtonStyle">@style/AppTheme.ActionButtonStyle</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.ActionBarStyle.Title">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/colorTextLight</item>
-    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.ActionButtonStyle" parent="@android:style/Widget.DeviceDefault.Light.ActionButton.Overflow">
-        <item name="android:background">?android:selectableItemBackground</item>
-        <item name="android:icon">@drawable/ic_more_vert_white_24dp</item>
-    </style>
-
-    <style name="AppTheme.ActionModeStyle" parent="@android:style/Widget.DeviceDefault.Light.ActionMode">
-        <item name="android:actionButtonStyle">@style/AppTheme.ActionButtonStyle</item>
-        <item name="android:titleTextStyle">@style/AppTheme.ActionBarStyle.Title</item>
-    </style>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

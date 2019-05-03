@@ -5,9 +5,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
 import android.text.TextUtils
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.ExpressCodeSms
 import chenmc.sms.transaction.service.CopyTextService
@@ -40,9 +40,9 @@ class ExpressSmsHandler : ISmsHandler {
         val title = context.getString(
                 R.string.express_is,
                 codeSms.serviceProvider)
-        val isContentEmpty = TextUtils.isEmpty(codeSms.content)
-        val contentText = codeSms.code + if (isContentEmpty) "" else " " + codeSms.content
-        val bigText = codeSms.code + if (isContentEmpty) "" else "\n${codeSms.content}"
+        val isContentEmpty = TextUtils.isEmpty(codeSms.extra)
+        val contentText = codeSms.code + if (isContentEmpty) "" else " " + codeSms.extra
+        val bigText = codeSms.code + if (isContentEmpty) "" else "\n${codeSms.extra}"
         val copyText = "$title\n$bigText"
 
         // 通知按钮：点击复制通知内容

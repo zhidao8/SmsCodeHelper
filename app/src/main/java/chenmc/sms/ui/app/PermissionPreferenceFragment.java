@@ -8,44 +8,43 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.util.SparseArray;
+import androidx.annotation.NonNull;
+import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult;
 
 import java.util.ArrayList;
 
-import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult;
-
 /**
  * @author 明明
- *         Created on 2017/8/11.
+ * Created on 2017/8/11.
  */
 
 public abstract class PermissionPreferenceFragment extends PreferenceFragment {
-    
+
     private SparseArray<IOnRequestPermissionsResult> mListeners = new SparseArray<>(2);
-    
+
     @SuppressLint("NewApi")
     public void requestPermissions(int requestCode, String[] permissions,
-        IOnRequestPermissionsResult listener) {
-        
+                                   IOnRequestPermissionsResult listener) {
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (listener != null) {
                 listener.onPermissionGranted(requestCode, permissions);
             }
             return;
         }
-        
+
         // 标记系统是否授予所有的权限
         boolean grantedAll = true;
         for (String permission : permissions) {
             if (getActivity().checkSelfPermission(permission) !=
-                PackageManager.PERMISSION_GRANTED) {
+                    PackageManager.PERMISSION_GRANTED) {
                 // 至少有一个权限没有被系统授予
                 grantedAll = false;
                 break;
             }
         }
-        
+
         if (grantedAll) {
             if (listener != null) {
                 listener.onPermissionGranted(requestCode, permissions);
@@ -56,11 +55,11 @@ public abstract class PermissionPreferenceFragment extends PreferenceFragment {
             requestPermissions(permissions, requestCode);
         }
     }
-    
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-        @NonNull int[] grantResults) {
+                                           @NonNull int[] grantResults) {
         IOnRequestPermissionsResult listener = mListeners.get(requestCode);
         if (listener != null) {
             // 使用线性表将系统允许的权限和不被系统允许的权限分别保存起来
@@ -75,29 +74,29 @@ public abstract class PermissionPreferenceFragment extends PreferenceFragment {
                     alwaysList.add(!shouldShowRequestPermissionRationale(permissions[i]));
                 }
             }
-            
+
             if (grantedList.size() > 0) {
                 listener.onPermissionGranted(requestCode, grantedList.toArray(new String[grantedList.size()]));
             }
-            
+
             if (deniedList.size() > 0) {
                 boolean[] bAlways = new boolean[alwaysList.size()];
                 for (int i = 0; i < alwaysList.size(); i++) {
                     bAlways[i] = alwaysList.get(i);
                 }
                 listener.onPermissionDenied(requestCode,
-                    deniedList.toArray(new String[deniedList.size()]), bAlways);
+                        deniedList.toArray(new String[deniedList.size()]), bAlways);
             }
         }
         mListeners.remove(requestCode);
-        
+
     }
-    
+
     protected void showApplicationDetail(int requestCode) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
         intent.setData(uri);
         startActivityForResult(intent, requestCode);
     }
-    
+
 }

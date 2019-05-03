@@ -7,9 +7,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.VerificationCodeSms
 import chenmc.sms.data.storage.AppPreference
@@ -49,7 +49,7 @@ class VerificationSmsHandler : ISmsHandler {
             // 获取系统剪切板
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboardManager.primaryClip = ClipData.newPlainText("code", codeSms.code)
-            ToastUtil.showToast(
+            ToastUtil.showSingletonToast(
                     context.getString(R.string.sms_code_have_been_copied, codeSms.code),
                     Toast.LENGTH_LONG)
         }

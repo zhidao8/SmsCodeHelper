@@ -4,9 +4,9 @@ import android.annotation.TargetApi
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Build
-import android.preference.EditTextPreference
 import android.util.AttributeSet
 import android.widget.Toast
+import androidx.preference.EditTextPreference
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.storage.AppPreference
 import chenmc.sms.transaction.SmsAnalyzer
@@ -29,28 +29,28 @@ class TestPreference : EditTextPreference {
     
     constructor(context: Context) : super(context)
     
-    override fun onPrepareDialogBuilder(builder: AlertDialog.Builder) {
-        editText.setHint(R.string.sms_content)
-        builder.setNegativeButton(R.string.cancel, this)
-        builder.setPositiveButton(R.string.ok) { _, _ ->
-            val context = context
-            
-            val sms = editText.text.toString()
-            
-            // 创建一个短信执行器
-            val executor = SmsHandlerExecutor(context)
-            
-            // 分析文本内容是否符合验证码短信或取件码短信的格式
-            val smsAnalyzer = SmsAnalyzer(context)
-            val verificationCodeSms = smsAnalyzer.analyseVerificationSms(sms)
-            val expressCodeSms = smsAnalyzer.analyseExpressSms(sms)
-            
-            if (verificationCodeSms != null || AppPreference.expressEnable && expressCodeSms != null) {
-                executor.execute(sms)
-            } else {
-                Toast.makeText(context, R.string.can_not_analyse_sms, Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+//    override fun onPrepareDialogBuilder(builder: AlertDialog.Builder) {
+//        editText.setHint(R.string.sms_content)
+//        builder.setNegativeButton(R.string.cancel, this)
+//        builder.setPositiveButton(R.string.ok) { _, _ ->
+//            val context = context
+//
+//            val sms = editText.text.toString()
+//
+//            // 创建一个短信执行器
+//            val executor = SmsHandlerExecutor(context)
+//
+//            // 分析文本内容是否符合验证码短信或取件码短信的格式
+//            val smsAnalyzer = SmsAnalyzer(context)
+//            val verificationCodeSms = smsAnalyzer.analyseVerificationSms(sms)
+//            val expressCodeSms = smsAnalyzer.analyseExpressSms(sms)
+//
+//            if (verificationCodeSms != null || AppPreference.expressEnable && expressCodeSms != null) {
+//                executor.execute(sms)
+//            } else {
+//                Toast.makeText(context, R.string.can_not_analyse_sms, Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
     
 }

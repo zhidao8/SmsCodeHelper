@@ -15,12 +15,12 @@ import java.lang.ref.WeakReference
  * @author Carter
  * Created on 2018-07-17
  */
-class SmsCodeRegexDao(context: Context) {
+class SmsCodeRegexDao private constructor(context: Context) {
 
     private val dbHelper: SQLiteOpenHelper = AppDatabase(context)
 
     fun selectAll(): MutableList<SmsCodeRegex> {
-        cacheWR?.get()?.run { return this }
+        cacheRef?.get()?.run { return this }
 
         val result: MutableList<SmsCodeRegex>
 
@@ -31,20 +31,23 @@ class SmsCodeRegexDao(context: Context) {
             result = ArrayList(cursor.count)
             cursor.use {
                 while (cursor.moveToNext()) {
-                    result.add(SmsCodeRegex(
+                    result.add(
+                        SmsCodeRegex(
                             cursor.getInt(ID),
                             cursor.getString(SMS),
                             cursor.getString(CODE),
                             cursor.getString(REGEX)
-                    ))
+                        )
+                    )
                 }
             }
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()
+            db.close()
         }
 
-        cacheWR = WeakReference(result)
+        cacheRef = WeakReference(result)
         return result
     }
 
@@ -69,9 +72,10 @@ class SmsCodeRegexDao(context: Context) {
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()
+            db.close()
         }
 
-        cacheWR = null
+        cacheRef = null
         return result.toLongArray()
     }
 
@@ -95,9 +99,10 @@ class SmsCodeRegexDao(context: Context) {
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()
+            db.close()
         }
 
-        cacheWR = null
+        cacheRef = null
         return result
     }
 
@@ -116,9 +121,10 @@ class SmsCodeRegexDao(context: Context) {
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()
+            db.close()
         }
 
-        cacheWR = null
+        cacheRef = null
         return result
     }
 
@@ -128,8 +134,15 @@ class SmsCodeRegexDao(context: Context) {
     private fun Cursor.getString(columnName: String) =
         this.getString(this.getColumnIndex(columnName))
 
-    private companion object {
+    companion object {
+        fun getInstance(context: Context): SmsCodeRegexDao =
+            instanceRef?.get() ?: SmsCodeRegexDao(context).apply {
+                instanceRef = WeakReference(this)
+            }
+
         @JvmStatic
-        private var cacheWR: WeakReference<MutableList<SmsCodeRegex>>? = null
+        private var instanceRef: WeakReference<SmsCodeRegexDao>? = null
+        @JvmStatic
+        private var cacheRef: WeakReference<MutableList<SmsCodeRegex>>? = null
     }
 }

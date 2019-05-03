@@ -5,13 +5,9 @@ package chenmc.sms.data
  * Created by 明明 on 2017/7/1.
  */
 
-class VerificationCodeSms : CodeSms {
-    
-    constructor()
-    
-    constructor(code: String) : super(code)
-    
-    constructor(serviceProvider: String, verificationCode: String) : super(serviceProvider, verificationCode)
-    
-    constructor(serviceProvider: String, code: String, content: String) : super(serviceProvider, code, content)
-}
+class VerificationCodeSms @JvmOverloads constructor(
+    raw: String,
+    serviceProvider: String = "",
+    code: String = "",
+    extra: String = ""
+) : CodeSms(raw, serviceProvider, code, extra)

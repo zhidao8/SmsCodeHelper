@@ -264,7 +264,7 @@ public class FileChooserDialog implements ListView.OnItemClickListener,
                 text += "/";
             }
             viewHolder.tv.setText(text);
-            // 当前的 Item 被处于被选取状态，改变 Item 的背景颜色
+            // 当前的 DbSms 被处于被选取状态，改变 DbSms 的背景颜色
             if (fileWrapper.checked) {
                 ((ViewGroup) viewHolder.tv.getParent()).setBackgroundResource(R.color.listItemChecked);
             } else {

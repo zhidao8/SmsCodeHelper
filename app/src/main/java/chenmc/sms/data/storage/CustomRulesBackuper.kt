@@ -28,7 +28,7 @@ class CustomRulesBackuper {
     private val timeFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss.SSS", Locale.getDefault())
 
     constructor(context: Context) {
-        dao = SmsCodeRegexDao(context)
+        dao = SmsCodeRegexDao.getInstance(context)
     }
 
     constructor(dao: SmsCodeRegexDao) {

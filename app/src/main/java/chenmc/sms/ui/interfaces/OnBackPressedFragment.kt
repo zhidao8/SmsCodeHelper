@@ -5,7 +5,7 @@ package chenmc.sms.ui.interfaces
  * Created on 2017-09-29
  */
 
-interface IOnBackPressedFragment {
+interface OnBackPressedFragment {
     
     fun onBackPressed(): Boolean
 }

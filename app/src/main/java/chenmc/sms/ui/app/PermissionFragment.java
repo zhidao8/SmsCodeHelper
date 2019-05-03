@@ -2,18 +2,20 @@ package chenmc.sms.ui.app;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.util.SparseArray;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult;
 
 import java.util.ArrayList;
-
-import chenmc.sms.ui.interfaces.IOnRequestPermissionsResult;
 
 /**
  * @author 明明
@@ -38,11 +40,15 @@ public abstract class PermissionFragment extends Fragment {
         // 标记系统是否授予所有的权限
         boolean grantedAll = true;
         for (String permission : permissions) {
-            if (getActivity().checkSelfPermission(permission) !=
-                PackageManager.PERMISSION_GRANTED) {
-                // 至少有一个权限没有被系统授予
+            Context ctx = getContext();
+            if (ctx != null) {
+                if (ContextCompat.checkSelfPermission(ctx, permission) != PackageManager.PERMISSION_GRANTED) {
+                    // 至少有一个权限没有被系统授予
+                    grantedAll = false;
+                    break;
+                }
+            } else {
                 grantedAll = false;
-                break;
             }
         }
         
@@ -77,7 +83,7 @@ public abstract class PermissionFragment extends Fragment {
             }
             
             if (grantedList.size() > 0) {
-                listener.onPermissionGranted(requestCode, grantedList.toArray(new String[grantedList.size()]));
+                listener.onPermissionGranted(requestCode, grantedList.toArray(new String[0]));
             }
             
             if (deniedList.size() > 0) {
@@ -86,18 +92,27 @@ public abstract class PermissionFragment extends Fragment {
                     bAlways[i] = alwaysList.get(i);
                 }
                 listener.onPermissionDenied(requestCode,
-                    deniedList.toArray(new String[deniedList.size()]), bAlways);
+                    deniedList.toArray(new String[0]), bAlways);
             }
         }
         mListeners.remove(requestCode);
         
     }
     
-    protected void showApplicationDetail(int requestCode) {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-        intent.setData(uri);
-        startActivityForResult(intent, requestCode);
+    protected boolean showApplicationDetail(int requestCode) {
+        FragmentActivity act = getActivity();
+        if (act != null) {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", act.getPackageName(), null);
+            intent.setData(uri);
+            if (intent.resolveActivity(act.getPackageManager()) != null) {
+                startActivityForResult(intent, requestCode);
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
     
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/pref_about">
+
+        <Preference
+            android:key="@string/pref_key_about"
+            android:summary="@string/pref_about_summary"
+            android:title="@string/pref_about" />
+
+        <Preference
+            android:key="@string/pref_key_author"
+            android:summary="zhidao8"
+            android:title="@string/pref_title_author" />
+
+        <Preference
+            android:key="@string/pref_key_store"
+            android:summary="@string/pref_title_rate_this_app"
+            android:title="@string/pref_title_to_store" />
+
+        <Preference
+            android:key="@string/pref_key_source_address"
+            android:summary="zhidao8/SmsCodeHelper"
+            android:title="GitHub" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_title_donate">
+        <Preference
+            android:key="@string/pref_key_alipay"
+            android:title="@string/pref_title_alipay" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
