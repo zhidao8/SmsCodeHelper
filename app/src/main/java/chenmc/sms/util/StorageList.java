@@ -13,10 +13,10 @@ import java.lang.reflect.Method;
 
 public class StorageList {
     private static final String TAG = "StorageList";
-    
+
     private StorageManager mStorageManager;
     private Method mMethodGetPaths;
-    
+
     public StorageList(Context context) {
         mStorageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
         try {
@@ -25,7 +25,7 @@ public class StorageList {
             e.printStackTrace();
         }
     }
-    
+
     public String[] getVolumePaths() {
         String[] paths = null;
         try {
@@ -36,9 +36,9 @@ public class StorageList {
         } catch (IllegalAccessException e) {
             Log.e(TAG, "IllegalAccess", e);
         }
-        
+
         return paths;
     }
-    
-    
+
+
 }

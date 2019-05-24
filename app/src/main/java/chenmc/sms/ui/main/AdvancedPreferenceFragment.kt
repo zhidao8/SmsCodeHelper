@@ -139,7 +139,8 @@ class AdvancedPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPref
 
                         // 先将当前默认启动应用保存起来
                         AppPreference.defaultSmsApp = Settings.Secure.getString(
-                            activity.contentResolver, "sms_default_application")
+                            activity.contentResolver, "sms_default_application"
+                        )
                         activity.packageName
                     } else {
                         AppPreference.defaultSmsApp

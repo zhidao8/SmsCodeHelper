@@ -38,23 +38,28 @@ class ExpressSmsHandler : ISmsHandler {
     private fun notifyNotification(codeSms: ExpressCodeSms) {
         val notificationId = notificationId
         val title = context.getString(
-                R.string.express_is,
-                codeSms.serviceProvider)
+            R.string.express_is,
+            codeSms.serviceProvider
+        )
         val isContentEmpty = TextUtils.isEmpty(codeSms.extra)
         val contentText = codeSms.code + if (isContentEmpty) "" else " " + codeSms.extra
         val bigText = codeSms.code + if (isContentEmpty) "" else "\n${codeSms.extra}"
         val copyText = "$title\n$bigText"
 
         // 通知按钮：点击复制通知内容
-        val copyContentActionPi = PendingIntent.getService(context, requestCode,
-                Intent(context, CopyTextService::class.java)
-                    .putExtra(CopyTextService.EXTRA_TEXT, copyText),
-                PendingIntent.FLAG_UPDATE_CURRENT)
+        val copyContentActionPi = PendingIntent.getService(
+            context, requestCode,
+            Intent(context, CopyTextService::class.java)
+                .putExtra(CopyTextService.EXTRA_TEXT, copyText),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
         // 通知按钮：点击复制取件码
-        val copyCodeActionPi = PendingIntent.getService(context, requestCode,
-                Intent(context, CopyTextService::class.java)
-                    .putExtra(CopyTextService.EXTRA_EXPRESS, codeSms.code),
-                PendingIntent.FLAG_UPDATE_CURRENT)
+        val copyCodeActionPi = PendingIntent.getService(
+            context, requestCode,
+            Intent(context, CopyTextService::class.java)
+                .putExtra(CopyTextService.EXTRA_EXPRESS, codeSms.code),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         val builder = NotificationCompat.Builder(context, NotificationContract.CHANNEL_ID_EXPRESS)
             .setContentTitle(title) // 通知标题
@@ -63,14 +68,20 @@ class ExpressSmsHandler : ISmsHandler {
             .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
             .setDefaults(NotificationCompat.DEFAULT_SOUND or NotificationCompat.DEFAULT_LIGHTS) // 通知声音和呼吸灯
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE) // 通知显示级别
-            .setSmallIcon(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                R.drawable.ic_notification else R.mipmap.ic_launcher) // 小通知图标
+            .setSmallIcon(
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    R.drawable.ic_notification else R.mipmap.ic_launcher
+            ) // 小通知图标
             .setColor(ContextCompat.getColor(context, R.color.colorPrimary)) // 小通知图标颜色
             .setWhen(System.currentTimeMillis()) // 通知出现时间
             .setShowWhen(true) // 显示通知出现时间
             .setAutoCancel(true) // 用户点击通知后自动取消通知，实测无效
-            .setContentIntent(PendingIntent.getService(context, requestCode, Intent(),
-                            PendingIntent.FLAG_CANCEL_CURRENT)) // 用户点击通知后自动取消通知
+            .setContentIntent(
+                PendingIntent.getService(
+                    context, requestCode, Intent(),
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            ) // 用户点击通知后自动取消通知
             .addAction(0, context.getString(R.string.copy_content), copyContentActionPi)
             .addAction(0, context.getString(R.string.copy_express_code), copyCodeActionPi)
 

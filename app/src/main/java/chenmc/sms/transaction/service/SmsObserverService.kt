@@ -21,33 +21,35 @@ import chenmc.sms.transaction.SmsHandlerExecutor
 class SmsObserverService : Service() {
 
     private lateinit var smsObserver: SmsObserver
-    
+
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
-    
+
     override fun onCreate() {
         super.onCreate()
-        
+
         smsObserver = SmsObserver(Handler(Looper.getMainLooper()))
         // 注册短信数据库监听
-        contentResolver.registerContentObserver(Uri.parse("content://sms/"), true,
-                smsObserver)
+        contentResolver.registerContentObserver(
+            Uri.parse("content://sms/"), true,
+            smsObserver
+        )
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
-        
+
         // 取消注册短信数据库监听
         contentResolver.unregisterContentObserver(smsObserver)
 
 //        Log.i(javaClass.canonicalName, "onDestroy")
     }
-    
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         return START_STICKY
     }
-    
+
     private inner class SmsObserver internal constructor(handler: Handler) : ContentObserver(handler) {
 
         // 上一次处理的短信在数据库中的 _id
@@ -56,9 +58,9 @@ class SmsObserverService : Service() {
 
         override fun onChange(selfChange: Boolean) {
             super.onChange(selfChange)
-            
+
             val context = this@SmsObserverService
-            
+
             //每当有新短信到来时，使用我们获取短消息的方法
             val (sms, databaseId) = SmsExtractor.extractFromDatabase(context)
             // 有新短信来时，该 onChange 方法会被多次调用，
@@ -72,7 +74,7 @@ class SmsObserverService : Service() {
 //            Log.i(javaClass.canonicalName, "$databaseId: $sms")
         }
     }
-    
+
     companion object {
 
         fun startThisService(context: Context) {

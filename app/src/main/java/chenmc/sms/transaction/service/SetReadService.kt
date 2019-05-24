@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
  * Created on 2018-04-21
  */
 class SetReadService : Service() {
-    
+
     private val handler: Handler = object : Handler(Looper.myLooper()) {
         override fun handleMessage(msg: Message) {
             val sms = msg.obj as String
@@ -26,21 +26,22 @@ class SetReadService : Service() {
             stopSelf(msg.what)
         }
     }
-    
+
     override fun onBind(intent: Intent?): IBinder? = null
-    
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         if (ContextCompat.checkSelfPermission(this, "android.permission.WRITE_SMS") ==
-                PackageManager.PERMISSION_GRANTED) {
-            
+            PackageManager.PERMISSION_GRANTED
+        ) {
+
             val message = handler.obtainMessage(startId, intent.getStringExtra(EXTRA_SMS))
             // 延迟 3 秒，等待短信写入数据库
             handler.sendMessageDelayed(message, 3 * 1000)
         } else stopSelf(startId)
-        
+
         return Service.START_NOT_STICKY
     }
-    
+
     companion object {
         const val EXTRA_SMS = "EXTRA_SMS"
     }

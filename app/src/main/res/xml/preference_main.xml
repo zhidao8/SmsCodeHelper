@@ -6,6 +6,8 @@
         android:entries="@array/pref_entries_mode"
         android:entryValues="@array/pref_entry_values_mode"
         android:key="@string/pref_key_mode"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
         android:title="@string/pref_mode" />
 
     <MultiSelectListPreference
@@ -23,6 +25,7 @@
 
     <EditTextPreference
         android:key="@string/pref_key_test_rules"
+        android:selectAllOnFocus="true"
         android:summary="@string/pref_test_rules_summary"
         android:title="@string/pref_test_rules" />
 

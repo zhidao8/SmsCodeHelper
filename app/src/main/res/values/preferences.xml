@@ -67,7 +67,6 @@
     <string name="pref_key_def_sms_app" translatable="false">sms_default_application</string>
     <string name="pref_key_value_def_sms_app" translatable="false">com.android.mms</string>
 
-    <bool name="pref_def_value_permission">true</bool>
     <bool name="pref_def_value_about">false</bool>
 
     <string name="pref_key_author" translatable="false">about_author</string>

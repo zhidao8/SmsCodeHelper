@@ -9,11 +9,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,14 +22,13 @@ import java.util.Map;
  * UncaughtException处理类,当程序发生Uncaught异常的时候,有该类来接管程序,并记录发送错误报告.
  *
  * @author user
- *
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private static final String TAG = "CrashHandler";
 
     private static boolean HAVE_INSTANCE = false;
-    
+
     //系统默认的UncaughtException处理类
     private Thread.UncaughtExceptionHandler mDefaultHandler;
 
@@ -43,17 +38,19 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     //用来存储设备信息和异常信息
     private Map<String, String> mInfos = new HashMap<>();
 
-    /** 保证只有一个CrashHandler实例 */
+    /**
+     * 保证只有一个CrashHandler实例
+     */
     private CrashHandler(Context context) {
         mContext = context;
         //获取系统默认的UncaughtException处理器
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         //设置该CrashHandler为程序的默认处理器
         Thread.setDefaultUncaughtExceptionHandler(this);
-    
+
         HAVE_INSTANCE = true;
     }
-    
+
     public static void init(Context context) {
         if (HAVE_INSTANCE)
             throw new UnsupportedOperationException("This method can not invoke more than once.");
@@ -101,6 +98,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     /**
      * 收集设备参数信息
+     *
      * @param ctx Context
      */
     private void collectDeviceInfo(Context ctx) {
@@ -131,7 +129,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * 保存错误信息到文件中
      *
      * @param ex Exception
-     * @return  返回文件,便于将文件传送到服务器
+     * @return 返回文件, 便于将文件传送到服务器
      */
     private File saveCrashInfoToFile(Throwable ex) {
 
@@ -153,20 +151,20 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         printWriter.close();
         String result = writer.toString();
         sb.append(result);
-    
+
         File externalFilesDir = mContext.getExternalFilesDir("");
         if (externalFilesDir == null) {
             Log.e(TAG, "Context.getExternalFilesDir(\"\") == null");
             return null;
         }
-        
+
         long timestamp = System.currentTimeMillis();
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
         String time = formatter.format(new Date(timestamp));
         String fileSimpleName = "log-" + time + "-" + (timestamp % 1000) + ".log";
-    
+
         File logFile = new File(new File(externalFilesDir, "log"), fileSimpleName);
-        
+
         // 父文件夹不存在且创建失败
         if (!logFile.getParentFile().exists() && !logFile.getParentFile().mkdirs()) {
             Log.e(TAG, "Failed to execute 'File.getParentFile().mkdirs()'");

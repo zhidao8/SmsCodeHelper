@@ -1,42 +1,43 @@
 package chenmc.sms.util;
 
 import android.text.TextUtils;
+import chenmc.sms.data.storage.SmsCodeRegex;
 
 import java.util.Locale;
 
-import chenmc.sms.data.storage.SmsCodeRegex;
-
 /**
  * 处理验证码匹配规则的工具类
+ *
  * @author 明 明
- *         Created on 2017-4-27.
+ * Created on 2017-4-27.
  */
 public class SmsMatchRuleUtil {
-    
+
     /**
      * 对 SmsMatchRuleBean 的实例的处理成功的标志
      *
      * @see #handleItem(SmsCodeRegex)
      */
     public static final int HANDLE_RESULT_SUCCESS = 0;
-    
+
     /**
      * 对 SmsMatchRuleBean 的实例的处理失败的标志。失败原因：包含空内容
      *
      * @see #handleItem(SmsCodeRegex)
      */
     public static final int HANDLE_ERROR_EMPTY_CONTENT = -1;
-    
+
     /**
      * 对 SmsMatchRuleBean 的实例的处理失败的标志。失败原因：短信内容不包含给定的验证码
      *
      * @see #handleItem(SmsCodeRegex)
      */
     public static final int HANDLE_ERROR_NO_CONTAINS = -2;
-    
-    
+
+
     /**
      * 处理 {@link SmsCodeRegex} 实例，分析并生成短信验证码规则
+     *
      * @param item SmsMatchRuleBean 实例
      * @return 处理结果码。值可以为 {@link #HANDLE_ERROR_EMPTY_CONTENT}，
      * {@link #HANDLE_ERROR_NO_CONTAINS}，{@link #HANDLE_RESULT_SUCCESS}
@@ -44,15 +45,15 @@ public class SmsMatchRuleUtil {
     public static int handleItem(SmsCodeRegex item) {
         String sms = item.getSms();
         String verificationCode = item.getVerificationCode();
-       
+
         if (TextUtils.isEmpty(sms) || TextUtils.isEmpty(verificationCode)) {
             return HANDLE_ERROR_EMPTY_CONTENT;
         }
-        
+
         if (!sms.contains(verificationCode)) {
             return HANDLE_ERROR_NO_CONTAINS;
         }
-        
+
         int startCode = sms.indexOf(verificationCode);
         int endCode = startCode + verificationCode.length();
         int index1 = startCode;
@@ -86,22 +87,22 @@ public class SmsMatchRuleUtil {
             index2++;
         }
         String s1 = sms.substring(index1, startCode)
-            .replaceAll("\\.", "\\\\.")
-            .replaceAll("\\[", "\\\\[")
-            .replaceAll("\\]", "\\\\]");
+                .replaceAll("\\.", "\\\\.")
+                .replaceAll("\\[", "\\\\[")
+                .replaceAll("\\]", "\\\\]");
         String s2 = sms.substring(endCode, index2)
-            .replaceAll("\\.", "\\\\.")
-            .replaceAll("\\[", "\\\\[")
-            .replaceAll("\\]", "\\\\]");
+                .replaceAll("\\.", "\\\\.")
+                .replaceAll("\\[", "\\\\[")
+                .replaceAll("\\]", "\\\\]");
 
         String regExp1 = index1 < startCode ?
-            String.format("(?<=%s)", s1) : "";
+                String.format("(?<=%s)", s1) : "";
         String regExp2 = index2 > endCode ?
-            String.format("(?=%s)", s2) : "";
+                String.format("(?=%s)", s2) : "";
         String regCode = String.format(Locale.getDefault(), ".{%d}", verificationCode.length());
-        
+
         item.setRegex(regExp1 + regCode + regExp2);
-        
+
         return HANDLE_RESULT_SUCCESS;
     }
 }

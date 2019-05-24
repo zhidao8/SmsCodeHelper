@@ -9,15 +9,17 @@ import chenmc.sms.ui.interfaces.OnItemClickListener
 import chenmc.sms.ui.interfaces.OnItemLongClickListener
 import chenmc.sms.ui.main.adapter.SelectableAdapter
 
-class RecyclerAdapter : SelectableAdapter<VH>() {
+class DbSmsAdapter : SelectableAdapter<VH>() {
 
     private var mData: MutableList<DbSms> = mutableListOf()
     private val mExpandedItems = SparseBooleanArray(0)
 
-    fun setData(value: MutableList<DbSms>) {
-        mData = value
-        notifyDataSetChanged()
-    }
+    var data: List<DbSms>
+        get () = mData
+        set(value) {
+            mData = if (value is MutableList) value else value.toMutableList()
+            notifyDataSetChanged()
+        }
 
     var onItemClickListener: OnItemClickListener<VH>? = null
 

@@ -13,29 +13,37 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.provider.Telephony
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.preference.*
+import androidx.preference.ListPreference
+import androidx.preference.MultiSelectListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import chenmc.sms.code.helper.R
 import chenmc.sms.data.storage.AppPreference
 import chenmc.sms.transaction.SmsAnalyzer
 import chenmc.sms.transaction.SmsHandlerExecutor
 import chenmc.sms.transaction.service.SmsObserverService
-import chenmc.sms.ui.main.customrules.CustomRulesFragment
 import chenmc.sms.ui.main.codesmsclear.CodeSmsClearFragment
+import chenmc.sms.ui.main.customrules.CustomRulesFragment
 import chenmc.sms.util.ActivityUtil
 import chenmc.sms.util.ToastUtil
+import com.tbruyelle.rxpermissions2.RxPermissions
 
 /**
  * Created by 明明 on 2017/8/9.
  */
 
 class MainPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
+
+    private lateinit var mRxPermissions: RxPermissions
 
     private val mHandler = Handler(Looper.myLooper()) { msg ->
         when (msg.what) {
@@ -54,16 +62,11 @@ class MainPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferen
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        listView.apply {
-            setPadding(0, 0, 0, 0)
-        }
-    }
-
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preference_main)
         initPreference()
+
+        mRxPermissions = RxPermissions(this)
     }
 
     private fun initPreference() {
@@ -133,42 +136,58 @@ class MainPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferen
     private fun showPermissionFirstRun() {
         val pref = findPreference(getString(R.string.pref_key_mode)) as ListPreference
         val values = resources.getStringArray(R.array.pref_entry_values_mode)
-        val permission = when (pref.value) {
-            values[0] -> Pair(Manifest.permission.RECEIVE_SMS, REQUEST_PERMISSIONS_RECEIVE_SMS)
-            values[1] -> Pair(Manifest.permission.READ_SMS, REQUEST_PERMISSIONS_READ_SMS)
-            else -> null
-        }
-        val action: () -> Unit = {
-            permission?.let { (permission, requestCode) ->
-                requestPermissionIfNeed(permission, requestCode)
-            }
+        val action: () -> Unit = when (pref.value) {
+            values[0] -> this::requestPermissionReceiveSms
+            values[1] -> this::requestPermissionReadSms
+            else -> ({ Unit })
         }
         if (AppPreference.isFirstRun) {
             showPermissionExplanation(action)
             // 保存一个 false 值标记应用已经运行过了
             AppPreference.isFirstRun = false
         } else {
-            action()
+            mHandler.post(action)
         }
     }
 
-    private fun requestPermissionIfNeed(permission: String, requestCode: Int, delay: Long = 0) {
-        activity?.let { activity ->
-            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
-                requestPermission(permission, requestCode, delay)
+    private fun requestPermissionReceiveSms() {
+        mRxPermissions
+            .requestEach(Manifest.permission.RECEIVE_SMS)
+            .subscribe {
+                if (!it.granted) {
+                    ToastUtil.showSingletonLongToast(R.string.no_receive_sms_permission_and_work_abnormal)
+
+                    if (!it.shouldShowRequestPermissionRationale) {
+                        // 请求权限时用户选择了不再提醒，{@link DELAY_SHOW_APP_DETAIL} 毫秒后显示应用详情，
+                        // 引导用户再次授权
+                        val message = mHandler.obtainMessage(WHAT_SHOW_APP_DETAIL)
+                        message.data = Bundle(1).apply {
+                            putInt(DATA_REQUEST_CODE, REQUEST_PERMISSIONS_RECEIVE_SMS)
+                        }
+                        mHandler.sendMessageDelayed(message, DELAY_SHOW_APP_DETAIL)
+                    }
+                }
             }
-        }
     }
 
-    private fun requestPermission(permission: String, requestCode: Int, delay: Long = 0) {
-        val action: () -> Unit = {
-            requestPermissions(arrayOf(permission), requestCode)
-        }
-        if (delay >= 0) {
-            mHandler.postDelayed(action, delay)
-        } else {
-            action()
-        }
+    private fun requestPermissionReadSms() {
+        mRxPermissions
+            .requestEach(Manifest.permission.RECEIVE_SMS)
+            .subscribe {
+                if (!it.granted) {
+                    ToastUtil.showSingletonLongToast(R.string.no_read_sms_permission_and_work_abnormal)
+
+                    if (!it.shouldShowRequestPermissionRationale) {
+                        // 请求权限时用户选择了不再提醒，{@link DELAY_SHOW_APP_DETAIL} 毫秒后显示应用详情，
+                        // 引导用户再次授权
+                        val message = mHandler.obtainMessage(WHAT_SHOW_APP_DETAIL)
+                        message.data = Bundle(1).apply {
+                            putInt(DATA_REQUEST_CODE, REQUEST_PERMISSIONS_READ_SMS)
+                        }
+                        mHandler.sendMessageDelayed(message, DELAY_SHOW_APP_DETAIL)
+                    }
+                }
+            }
     }
 
     // 显示权限说明
@@ -187,9 +206,7 @@ class MainPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferen
                 .setView(dialogView)
                 .setTitle(getString(R.string.pref_permission))
                 .setPositiveButton(R.string.ok) { _, _ ->
-                    if (action != null) {
-                        action()
-                    }
+                    action?.invoke()
                 }
                 .setCancelable(false)
                 .create()
@@ -231,49 +248,6 @@ class MainPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferen
                     SmsObserverService.startThisService(activity)
                 else {
                     ToastUtil.showSingletonToast(R.string.p_not_support_compat_mode, Toast.LENGTH_LONG)
-                }
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when (requestCode) {
-            REQUEST_PERMISSIONS_RECEIVE_SMS -> {
-                for ((i, result) in grantResults.withIndex()) {
-                    if (result != PackageManager.PERMISSION_GRANTED) {
-                        ToastUtil.showSingletonToast(R.string.no_receive_sms_permission_and_work_abnormal, Toast.LENGTH_LONG)
-
-                        if (!shouldShowRequestPermissionRationale(permissions[i])) {
-                            // 请求权限时用户选择了不再提醒，{@link DELAY_SHOW_APP_DETAIL} 毫秒后显示应用详情，
-                            // 引导用户再次授权
-                            val message = mHandler.obtainMessage(WHAT_SHOW_APP_DETAIL)
-                            message.data = Bundle(1).apply {
-                                putInt(DATA_REQUEST_CODE, REQUEST_PERMISSIONS_RECEIVE_SMS)
-                            }
-                            mHandler.sendMessageDelayed(message, DELAY_SHOW_APP_DETAIL)
-                        }
-                        break
-                    }
-                }
-            }
-            REQUEST_PERMISSIONS_READ_SMS -> {
-                for ((i, result) in grantResults.withIndex()) {
-                    if (result != PackageManager.PERMISSION_GRANTED) {
-                        ToastUtil.showSingletonToast(R.string.no_read_sms_permission_and_work_abnormal, Toast.LENGTH_LONG)
-
-                        if (!shouldShowRequestPermissionRationale(permissions[i])) {
-                            // 请求权限时用户选择了不再提醒，{@link DELAY_SHOW_APP_DETAIL} 毫秒后显示应用详情，
-                            // 引导用户再次授权
-                            val message = mHandler.obtainMessage(WHAT_SHOW_APP_DETAIL)
-                            message.data = Bundle(1).apply {
-                                putInt(DATA_REQUEST_CODE, REQUEST_PERMISSIONS_READ_SMS)
-                            }
-                            mHandler.sendMessageDelayed(message, DELAY_SHOW_APP_DETAIL)
-                        }
-                        break
-                    }
                 }
             }
         }
@@ -359,7 +333,7 @@ class MainPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferen
                 val possibleValues = resources.getStringArray(R.array.pref_entry_values_mode)
                 when (newValue as String) {
                     possibleValues[0] -> {
-                        requestPermissionIfNeed(Manifest.permission.RECEIVE_SMS, REQUEST_PERMISSIONS_RECEIVE_SMS, -1)
+                        requestPermissionReceiveSms()
                     }
                     possibleValues[1] -> {
                         AlertDialog.Builder(activity)
@@ -367,7 +341,7 @@ class MainPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferen
                             .setMessage(R.string.pref_compat_mode_desc)
                             .setPositiveButton(R.string.ok) { _, _ ->
                                 // 请求权限
-                                requestPermissionIfNeed(Manifest.permission.READ_SMS, REQUEST_PERMISSIONS_READ_SMS, -1)
+                                requestPermissionReadSms()
                             }
                             .create()
                             .show()
@@ -432,7 +406,10 @@ class MainPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferen
                             Manifest.permission.RECEIVE_SMS
                         ) != PackageManager.PERMISSION_GRANTED
                     ) {
-                        ToastUtil.showSingletonToast(R.string.no_receive_sms_permission_and_work_abnormal, Toast.LENGTH_LONG)
+                        ToastUtil.showSingletonToast(
+                            R.string.no_receive_sms_permission_and_work_abnormal,
+                            Toast.LENGTH_LONG
+                        )
                     }
                 }
             }
@@ -443,7 +420,10 @@ class MainPreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferen
                             Manifest.permission.READ_SMS
                         ) != PackageManager.PERMISSION_GRANTED
                     ) {
-                        ToastUtil.showSingletonToast(R.string.no_read_sms_permission_and_work_abnormal, Toast.LENGTH_LONG)
+                        ToastUtil.showSingletonToast(
+                            R.string.no_read_sms_permission_and_work_abnormal,
+                            Toast.LENGTH_LONG
+                        )
                     }
                 }
             }

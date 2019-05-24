@@ -8,8 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
  * @author Carter
  * Created on 2018-07-17
  */
-class AppDatabase(context: Context)
-    : SQLiteOpenHelper(context, AppDBContract.DATABASE, null, 2) {
+class AppDatabase(context: Context) : SQLiteOpenHelper(context, AppDBContract.DATABASE, null, 2) {
 
     override fun onCreate(db: SQLiteDatabase?) {
         db ?: return
@@ -29,6 +28,7 @@ class AppDatabase(context: Context)
     }
 
     private companion object {
-        private const val SQL_CREATE_TABLE: String = "CREATE TABLE IF NOT EXISTS `sms_code_regex` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sms` TEXT, `code` TEXT, `regex` TEXT)"
+        private const val SQL_CREATE_TABLE: String =
+            "CREATE TABLE IF NOT EXISTS `sms_code_regex` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sms` TEXT, `code` TEXT, `regex` TEXT)"
     }
 }

@@ -16,7 +16,7 @@ class SmsHandlerExecutor(private val context: Context) {
 
     fun execute(sms: String) {
         var handled = verificationSmsHandler.handle(context, sms)
-        
+
         // 如果应用开启了解析快递取件码短信
         if (AppPreference.expressEnable) {
             expressSmsHandler = ExpressSmsHandler()
@@ -24,10 +24,12 @@ class SmsHandlerExecutor(private val context: Context) {
             handled = expressSmsHandler?.handle(context, sms) ?: false
 
         } else expressSmsHandler = null
-        
+
         if (handled) {
-            context.startService(Intent(context, SetReadService::class.java)
-                .putExtra(SetReadService.EXTRA_SMS, sms))
+            context.startService(
+                Intent(context, SetReadService::class.java)
+                    .putExtra(SetReadService.EXTRA_SMS, sms)
+            )
         }
     }
 }

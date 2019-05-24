@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="chenmc.sms.code.helper"
     android:installLocation="internalOnly">
 
@@ -23,9 +22,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="${APP_LABEL}"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="android:label">
+        android:theme="@style/AppTheme">
 
         <activity
             android:name="chenmc.sms.ui.main.PreferenceActivity"
@@ -33,6 +30,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

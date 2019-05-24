@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteOpenHelper
+import androidx.core.database.sqlite.transaction
 import chenmc.sms.data.storage.AppDBContract.SmsCodeRegex.CODE
 import chenmc.sms.data.storage.AppDBContract.SmsCodeRegex.ID
 import chenmc.sms.data.storage.AppDBContract.SmsCodeRegex.REGEX
@@ -51,28 +52,63 @@ class SmsCodeRegexDao private constructor(context: Context) {
         return result
     }
 
+    fun findOne(id: Int): SmsCodeRegex? {
+
+        return dbHelper.readableDatabase.transaction {
+            val selection = "$ID = ?"
+            val selectionArgs = arrayOf("$id")
+            query(TABLE, null, selection, selectionArgs, null, null, null)
+                .use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        SmsCodeRegex(
+                            cursor.getInt(ID),
+                            cursor.getString(SMS),
+                            cursor.getString(CODE),
+                            cursor.getString(REGEX)
+                        )
+                    } else null
+                }
+        }
+    }
+
+    fun findOneByRegex(regex: String): SmsCodeRegex? {
+
+        return dbHelper.readableDatabase.transaction {
+            val selection = "$REGEX = ?"
+            val selectionArgs = arrayOf(regex)
+            query(TABLE, null, selection, selectionArgs, null, null, null)
+                .use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        SmsCodeRegex(
+                            cursor.getInt(ID),
+                            cursor.getString(SMS),
+                            cursor.getString(CODE),
+                            cursor.getString(REGEX)
+                        )
+                    } else null
+                }
+        }
+    }
+
     /**
      * 返回每一条插入到数据库中的记录的 rowId
      */
-    fun insert(vararg smsCodeRegexes: SmsCodeRegex): LongArray {
-        val result: MutableList<Long> = ArrayList(smsCodeRegexes.size)
+    fun insert(vararg args: SmsCodeRegex): LongArray {
+        val result: MutableList<Long> = ArrayList(args.size)
 
-        val db = dbHelper.writableDatabase
-        db.beginTransaction()
-        try {
-            for (it in smsCodeRegexes) {
-                val cv = ContentValues(3)
-                cv.put(SMS, it.sms)
-                cv.put(REGEX, it.regex)
-                cv.put(CODE, it.verificationCode)
+        dbHelper.writableDatabase.transaction {
+            args.mapTo(result) {
+                val regex = it.regex
 
-                val rowId = db.insert(TABLE, null, cv)
-                result.add(rowId)
+                if (regex != null && findOneByRegex(regex) == null) {
+                    val cv = ContentValues(3)
+                    cv.put(SMS, it.sms)
+                    cv.put(REGEX, it.regex)
+                    cv.put(CODE, it.verificationCode)
+
+                    insert(TABLE, null, cv)
+                } else -1
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
-            db.close()
         }
 
         cacheRef = null
@@ -82,24 +118,22 @@ class SmsCodeRegexDao private constructor(context: Context) {
     /**
      * 返回更新的记录的数量
      */
-    fun update(vararg smsCodeRegexes: SmsCodeRegex): Int {
+    fun update(vararg args: SmsCodeRegex): Int {
         var result = 0
 
-        val db = dbHelper.writableDatabase
-        db.beginTransaction()
-        try {
-            for (it in smsCodeRegexes) {
-                val cv = ContentValues(3)
-                cv.put(SMS, it.sms)
-                cv.put(REGEX, it.regex)
-                cv.put(CODE, it.verificationCode)
+        dbHelper.writableDatabase.transaction {
+            for (it in args) {
+                val regex = it.regex
 
-                result += db.update(TABLE, cv, "$ID = ?", arrayOf("${it.id}"))
+                if (regex != null && findOneByRegex(regex) == null) {
+                    val cv = ContentValues(3)
+                    cv.put(SMS, it.sms)
+                    cv.put(REGEX, it.regex)
+                    cv.put(CODE, it.verificationCode)
+
+                    result += update(TABLE, cv, "$ID = ?", arrayOf("${it.id}"))
+                }
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
-            db.close()
         }
 
         cacheRef = null
@@ -109,19 +143,13 @@ class SmsCodeRegexDao private constructor(context: Context) {
     /**
      * 返回删除的记录的数量
      */
-    fun delete(vararg smsCodeRegexes: SmsCodeRegex): Int {
+    fun delete(vararg args: SmsCodeRegex): Int {
         var result = 0
 
-        val db = dbHelper.writableDatabase
-        db.beginTransaction()
-        try {
-            for (it in smsCodeRegexes) {
-                result += db.delete(TABLE, "$ID = ?", arrayOf("${it.id}"))
+        dbHelper.writableDatabase.transaction {
+            for (it in args) {
+                result += delete(TABLE, "$ID = ?", arrayOf("${it.id}"))
             }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
-            db.close()
         }
 
         cacheRef = null

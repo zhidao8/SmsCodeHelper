@@ -14,7 +14,7 @@ import chenmc.sms.transaction.SmsAnalyzer
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 class SmsNotificationListenerService : NotificationListenerService() {
-    
+
     private val context: Context = this
 
     // API 21 之前，父类的这个方法是 abstract 的
@@ -28,7 +28,7 @@ class SmsNotificationListenerService : NotificationListenerService() {
                 val smsAnalyzer = SmsAnalyzer(context)
                 val verificationCodeSms =
                     smsAnalyzer.analyseVerificationSms(extras[Notification.EXTRA_TITLE]?.toString() ?: "")
-                    ?: smsAnalyzer.analyseVerificationSms(extras[Notification.EXTRA_TEXT]?.toString() ?: "")
+                        ?: smsAnalyzer.analyseVerificationSms(extras[Notification.EXTRA_TEXT]?.toString() ?: "")
                 if (verificationCodeSms != null) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         cancelNotification(sbn.key)

@@ -19,24 +19,24 @@ import java.util.ArrayList;
 
 /**
  * @author 明明
- *         Created on 2017/8/11.
+ * Created on 2017/8/11.
  */
 
 public abstract class PermissionFragment extends Fragment {
-    
+
     private SparseArray<IOnRequestPermissionsResult> mListeners = new SparseArray<>(2);
-    
+
     @SuppressLint("NewApi")
     public void requestPermissions(int requestCode, String[] permissions,
-        IOnRequestPermissionsResult listener) {
-        
+                                   IOnRequestPermissionsResult listener) {
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (listener != null) {
                 listener.onPermissionGranted(requestCode, permissions);
             }
             return;
         }
-        
+
         // 标记系统是否授予所有的权限
         boolean grantedAll = true;
         for (String permission : permissions) {
@@ -51,7 +51,7 @@ public abstract class PermissionFragment extends Fragment {
                 grantedAll = false;
             }
         }
-        
+
         if (grantedAll) {
             if (listener != null) {
                 listener.onPermissionGranted(requestCode, permissions);
@@ -62,11 +62,11 @@ public abstract class PermissionFragment extends Fragment {
             requestPermissions(permissions, requestCode);
         }
     }
-    
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-        @NonNull int[] grantResults) {
+                                           @NonNull int[] grantResults) {
         IOnRequestPermissionsResult listener = mListeners.get(requestCode);
         if (listener != null) {
             // 使用线性表将系统允许的权限和不被系统允许的权限分别保存起来
@@ -81,24 +81,24 @@ public abstract class PermissionFragment extends Fragment {
                     alwaysList.add(!shouldShowRequestPermissionRationale(permissions[i]));
                 }
             }
-            
+
             if (grantedList.size() > 0) {
                 listener.onPermissionGranted(requestCode, grantedList.toArray(new String[0]));
             }
-            
+
             if (deniedList.size() > 0) {
                 boolean[] bAlways = new boolean[alwaysList.size()];
                 for (int i = 0; i < alwaysList.size(); i++) {
                     bAlways[i] = alwaysList.get(i);
                 }
                 listener.onPermissionDenied(requestCode,
-                    deniedList.toArray(new String[0]), bAlways);
+                        deniedList.toArray(new String[0]), bAlways);
             }
         }
         mListeners.remove(requestCode);
-        
+
     }
-    
+
     protected boolean showApplicationDetail(int requestCode) {
         FragmentActivity act = getActivity();
         if (act != null) {
@@ -114,5 +114,5 @@ public abstract class PermissionFragment extends Fragment {
         }
         return false;
     }
-    
+
 }

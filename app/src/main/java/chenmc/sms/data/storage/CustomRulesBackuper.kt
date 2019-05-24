@@ -2,11 +2,7 @@ package chenmc.sms.data.storage
 
 import android.content.Context
 import chenmc.sms.ui.app.App.Companion.context
-import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonSyntaxException
+import com.google.gson.*
 import com.google.gson.stream.JsonWriter
 import java.io.File
 import java.io.FileReader
@@ -67,21 +63,19 @@ class CustomRulesBackuper {
 
     /**
      * 从 json 文件 [file] 中读取数据写入到数据库中。
-     * 文件格式错误返回 false，否则返回 true
+     * 文件格式错误返回 -1，否则返回数据成功插入的长度
      */
-    fun restore(file: File): Boolean {
-        try {
+    fun restore(file: File): LongArray? {
+        return try {
             val result = fromFile(file)
             dao.insert(*result.toTypedArray())
         } catch (e: JsonSyntaxException) {
             e.printStackTrace()
-            return false
+            null
         } catch (e: IllegalStateException) {
             e.printStackTrace()
-            return false
+            null
         }
-
-        return true
     }
 
     private fun fromFile(file: File): MutableList<SmsCodeRegex> {
@@ -97,10 +91,13 @@ class CustomRulesBackuper {
                 // json 对象中没有这些属性，即文件格式错误，抛出异常
                 throw IllegalStateException("There are no $SMS, $CODE or $REGEX property in json")
             }
-            result.add(SmsCodeRegex(
+            result.add(
+                SmsCodeRegex(
                     sms = sms.asString,
                     verificationCode = code.asString,
-                    regex = regex.asString))
+                    regex = regex.asString
+                )
+            )
         }
 
         return result

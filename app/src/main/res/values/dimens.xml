@@ -3,11 +3,10 @@
     <dimen name="activity_padding">16dp</dimen>
     <dimen name="activity_padding_more">24dp</dimen>
     <dimen name="item_padding">16dp</dimen>
-
-    <dimen name="dialog_text">16sp</dimen>
+    <dimen name="dp8">8dp</dimen>
+    <dimen name="list_vertical_padding">@dimen/dp8</dimen>
 
     <!-- Float Button -->
-    <dimen name="float_button_size">56dp</dimen>
     <dimen name="float_button_margin">36dp</dimen>
 
     <dimen name="default_edit_text_size">18sp</dimen>

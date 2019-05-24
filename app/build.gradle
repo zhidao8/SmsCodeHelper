@@ -16,18 +16,14 @@ android {
 
     buildTypes {
         release {
-            // 混淆
             minifyEnabled true
-            // Zipalign优化
             zipAlignEnabled true
-            // 移除无用的resource文件
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             manifestPlaceholders = [APP_LABEL: "@string/app_name"]
         }
         debug {
-            //在编译打包时会给包名加上后缀
             applicationIdSuffix '.debug'
             manifestPlaceholders = [APP_LABEL: "SmsCodeHelper"]
         }
@@ -44,7 +40,11 @@ dependencies {
     implementation "androidx.core:core-ktx:$ktxVersion"
     implementation "com.melnykov:floatingactionbutton:$floatingactionbuttonVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
+    implementation "com.github.tbruyelle:rxpermissions:0.10.2"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.8"
 }
+
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }

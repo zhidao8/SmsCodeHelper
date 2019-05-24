@@ -2,12 +2,7 @@
 <resources>
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796B</color>
-    <color name="colorTextLight">#FAFAFA</color>
     <color name="colorTextDark">#212121</color>
 
-    <color name="colorBackground">#E0E0E0</color>
     <color name="listItemChecked">#E0E0E0</color>
-    <color name="listItemBg">#FFFFFF</color>
-    
-    <color name="focusBackground">#5000</color>
 </resources>

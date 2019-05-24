@@ -35,14 +35,20 @@ class App : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // 针对 Android O 以上设置通知通道
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-                .createNotificationChannels(mutableListOf(
-                    NotificationChannel(NotificationContract.CHANNEL_ID_VERIFICATION,
-                        getString(R.string.notification_channel_verification_code),
-                        NotificationManager.IMPORTANCE_HIGH),
-                    NotificationChannel(NotificationContract.CHANNEL_ID_EXPRESS,
-                        getString(R.string.notification_channel_express_code),
-                        NotificationManager.IMPORTANCE_HIGH)
-                ))
+                .createNotificationChannels(
+                    mutableListOf(
+                        NotificationChannel(
+                            NotificationContract.CHANNEL_ID_VERIFICATION,
+                            getString(R.string.notification_channel_verification_code),
+                            NotificationManager.IMPORTANCE_HIGH
+                        ),
+                        NotificationChannel(
+                            NotificationContract.CHANNEL_ID_EXPRESS,
+                            getString(R.string.notification_channel_express_code),
+                            NotificationManager.IMPORTANCE_HIGH
+                        )
+                    )
+                )
         }
     }
 

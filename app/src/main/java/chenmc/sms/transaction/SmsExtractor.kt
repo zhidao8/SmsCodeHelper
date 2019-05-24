@@ -20,13 +20,13 @@ object SmsExtractor {
      */
     @JvmStatic
     fun extractFromIntent(intent: Intent): String {
-        
+
         val sb = StringBuilder()
-        
+
         val bundle = intent.extras ?: return ""
-        
+
         val pdus = bundle.get("pdus") as Array<*>? ?: return ""
-        
+
         val messages = arrayOfNulls<SmsMessage>(pdus.size)
         for (i in pdus.indices) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -41,7 +41,7 @@ object SmsExtractor {
         }
         return sb.toString()
     }
-    
+
     /**
      * 从系统短信数据库中获取对象
      *
@@ -51,23 +51,25 @@ object SmsExtractor {
     @JvmStatic
     fun extractFromDatabase(context: Context): DatabaseSms {
         var databaseSms = DatabaseSms("")
-        
+
         val cr = context.contentResolver
         // 获取接收到的短信（type = 1），并且只获取 5 秒以内的消息
         val where = "type = 1 and date > " + (System.currentTimeMillis() - 5000)
-        val cursor: Cursor? = cr.query(Uri.parse("content://sms/"),
-                arrayOf("_id", "body"), where, null, "date desc")
-        
+        val cursor: Cursor? = cr.query(
+            Uri.parse("content://sms/"),
+            arrayOf("_id", "body"), where, null, "date desc"
+        )
+
         if (cursor?.moveToFirst() == true) {
             databaseSms = DatabaseSms(
-                    cursor.getString(cursor.getColumnIndex("body")),
-                    cursor.getInt(cursor.getColumnIndex("_id"))
+                cursor.getString(cursor.getColumnIndex("body")),
+                cursor.getInt(cursor.getColumnIndex("_id"))
             )
         }
         cursor?.close()
 
         return databaseSms
     }
-    
+
     data class DatabaseSms(val sms: String, val databaseId: Int = -1)
 }
