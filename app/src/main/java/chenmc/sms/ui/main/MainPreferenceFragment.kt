@@ -15,7 +15,7 @@ import android.preference.Preference
 import android.preference.PreferenceScreen
 import android.provider.Settings
 import android.provider.Telephony
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem

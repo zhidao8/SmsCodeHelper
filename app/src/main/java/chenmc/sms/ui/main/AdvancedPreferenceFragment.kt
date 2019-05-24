@@ -12,7 +12,7 @@ import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
 import android.provider.Settings
 import android.provider.Telephony
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationManagerCompat
 import android.view.MenuItem
 import android.widget.Toast
 import chenmc.sms.code.helper.R

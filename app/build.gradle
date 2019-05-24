@@ -11,7 +11,7 @@ android {
         versionCode 20190503
         versionName "4.2"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -32,16 +32,12 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.core:core:$coreVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "com.android.support:support-v4:$supportVersion"
     implementation "com.melnykov:floatingactionbutton:$floatingactionbuttonVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
-}
-repositories {
-    mavenCentral()
 }

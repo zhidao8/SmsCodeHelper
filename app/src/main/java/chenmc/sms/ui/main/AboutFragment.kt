@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.preference.PreferenceScreen
-import android.support.v4.content.pm.PackageInfoCompat
+import androidx.core.content.pm.PackageInfoCompat
 import android.view.MenuItem
 import android.view.View
 import chenmc.sms.code.helper.R
